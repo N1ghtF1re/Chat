@@ -17,10 +17,12 @@ public abstract class Client {
 
     private User user;
 
-    private static Socket clientSocket; // Сокет для общения
-    private static BufferedReader in; // Поток чтения из соекта
-    private static BufferedWriter out; // Поток записи в сокет
+    private Socket clientSocket; // Сокет для общения
+    private BufferedReader in; // Поток чтения из соекта
+    private BufferedWriter out; // Поток записи в сокет
 
+    private ReadMsg readThread;
+    private WriteMsg writeThread;
     /**
      * Чтение сообщений с сервера в отдельном потоке
      */
@@ -29,7 +31,6 @@ public abstract class Client {
         public ReadMsg() {
             this.start();
         }
-
         @Override
         public void run() {
 
@@ -100,8 +101,13 @@ public abstract class Client {
         Message message;
         try {
             message = Message.decodeJSON(json);
-            if(message.getStatus().equals("ok")) {
+            String status = message.getStatus();
+            if ("ok".equals(status)) {
                 showMessage(message.getUser(), message.getMessage());
+            } else if ("exit".equals(status)) {
+                readThread.interrupt();
+                writeThread.interrupt();
+                showMessage(new User("System"), "Connection closed"));
             }
         } catch (IOException e) {
             System.out.println("Bad response");
@@ -133,6 +139,16 @@ public abstract class Client {
     public Client(String name, String ip, int port) throws IOException {
         this.user = new User(name);
         initSocket(ip, port);
+        readThread = new ReadMsg();
+        writeThread = new WriteMsg();
+
+
+        try {
+            readThread.join();
+            writeThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
