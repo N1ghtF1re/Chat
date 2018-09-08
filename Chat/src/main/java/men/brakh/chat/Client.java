@@ -62,11 +62,7 @@ public abstract class Client {
                 Scanner scan = new Scanner(System.in);
                 answer = scan.nextLine();
 
-                try {
-                    checkAnswer(Message.decodeJSON(answer));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                checkAnswer(new Message(getUser(), answer));
                 try {
                     out.flush();
                 } catch (IOException e) {
@@ -79,10 +75,20 @@ public abstract class Client {
     }
 
     /**
+     * Отправка сообщения на сервер
+     * @param message - json сообщения
+     * @throws IOException
+     */
+    public void sendMessage(String message) throws IOException {
+        out.write(message + "\n");
+        out.flush();
+    }
+
+    /**
      * Обработка сообщений пользоваетелей
      * @param message сообщение пользователя
      */
-    abstract void checkAnswer(Message message);
+    public abstract void checkAnswer(Message message);
 
     /**
      * Отрисовка сообщения пользователя
@@ -90,8 +96,16 @@ public abstract class Client {
      * @param message Сообщение
      */
     public void showMessage(User user, String message) {
-        System.out.printf("[%s%n] %s%n", user, message);
+
+        System.out.printf("[%s] %s%n", user, message);
     }
+
+
+    public void killThreads() {
+        readThread.interrupt();
+        writeThread.interrupt();
+    }
+
 
     /**
      * Проверка ответа сервера (если статус - "ок", то все хорошо)
@@ -99,18 +113,14 @@ public abstract class Client {
      */
     public void checkServerResponse(String json) {
         Message message;
-        try {
-            message = Message.decodeJSON(json);
-            String status = message.getStatus();
-            if ("ok".equals(status)) {
-                showMessage(message.getUser(), message.getMessage());
-            } else if ("exit".equals(status)) {
-                readThread.interrupt();
-                writeThread.interrupt();
-                showMessage(new User("System"), "Connection closed"));
-            }
-        } catch (IOException e) {
-            System.out.println("Bad response");
+        message = Message.decodeJSON(json);
+        String status = message.getStatus();
+        if ("ok".equals(status)) {
+            showMessage(message.getUser(), message.getMessage());
+        } else if ("exit".equals(status)) { // Сервер захотел прервать связь
+            killThreads();
+            showMessage(message.getUser(), message.getMessage());
+            showMessage(new User("System"), "Connection closed");
         }
     }
 
@@ -129,15 +139,17 @@ public abstract class Client {
         out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
     }
 
+    public void registerUser(String username) {
+        this.user = new User(username);
+    }
+
     /**
      * Создание объекта клиента
-     * @param name Имя пользователя клиента
      * @param ip IP сервера
      * @param port Порт сервера
      * @throws IOException
      */
-    public Client(String name, String ip, int port) throws IOException {
-        this.user = new User(name);
+    public Client(String ip, int port) throws IOException {
         initSocket(ip, port);
         readThread = new ReadMsg();
         writeThread = new WriteMsg();
@@ -152,5 +164,11 @@ public abstract class Client {
 
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -1,19 +1,16 @@
 package men.brakh.chat;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
 public class Message {
-    @JsonProperty("user")
     private User user; // Объект пользователя
-    @JsonProperty("user-message")
     private String message; // Сообщение пользователя
-    @JsonProperty("status")
     private String status; // Статус отправленного сообщения. Если exit - разрыв соединения
+    private String userType;
 
 
     public Message() {
@@ -30,36 +27,41 @@ public class Message {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
+    public User getUser() {return user;}
+    public void setUser(User user) {this.user = user;}
     public String getMessage() {
         return message;
     }
-
     public void setMessage(String message) {
         this.message = message;
     }
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getJSON() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
+    public String getJSON()  {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
-    public static Message decodeJSON(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, Message.class);
+
+    public static Message decodeJSON(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, Message.class);
     }
+
+    /*
+    public static void main(String args[]) {
+        Message message = new Message(new User("ek"), "Message");
+
+        try {
+            System.out.println(Message.decodeJSON( message.getJSON() ).getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }*/
 
 }
