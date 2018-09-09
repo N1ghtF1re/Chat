@@ -39,15 +39,15 @@ class ServerSomthing extends Thread {
 
         server.customerChatQueue.remove(chat);
         server.agentsQueue.add(agent);
-
-        agent.getSrvSom().send(new Message(new User("Server"), user.getName() + " disconnected").getJSON());
+        agent.getSrvSom().serverSend(user.getName() + " disconnected");
     }
 
     void usersHandler(Message userMessage) {
 
         if (userMessage.getStatus().equals("exit")) {
-            send(new Message(new User("System"), "Вы отключились от сервера").getJSON());
+            serverSend("Вы отключились от сервера", "exit");
             removeCustomerChatElement(userMessage.getUser());
+            return;
         }
 
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
@@ -57,8 +57,8 @@ class ServerSomthing extends Thread {
             TwoPersonChat userchat = server.customerChatQueue.searchCustomer(userMessage.getUser());
             userchat.addMessage(userMessage);
 
-            Message msg = new Message(new User("Server"), "Ваш запрос принят. Ожидайте подключения специалиста");
-            this.send(msg.getJSON()); // отослать принятое сообщение с
+            String msg = "Ваш запрос принят. Ожидайте подключения специалиста";
+            this.serverSend(msg); // отослать принятое сообщение с
 
             System.out.println("Added: " + userMessage.getUser());
         } else { // У пользователя уже есть созданный чат
@@ -121,5 +121,16 @@ class ServerSomthing extends Thread {
             out.write(msg + "\n");
             out.flush();
         } catch (IOException ignored) {}
+    }
+    void send(Message msg) {
+        send(msg.getJSON());
+    }
+
+    void serverSend(String strMsg, String status) {
+        Message message = new Message(new User("Server"),strMsg, status);
+        send(message.getJSON());
+    }
+    void serverSend(String strMsg) {
+        serverSend(strMsg, "ok");
     }
 }

@@ -1,6 +1,7 @@
 package men.brakh;
 
 import men.brakh.chat.Message;
+import men.brakh.chat.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -36,6 +37,9 @@ public class Server {
                             agent = agentsQueue.poll();
                             System.out.println(agent.getUser());
                             twoPersonChat.setAgent(agent);
+                            twoPersonChat.getCustomer().getSrvSom().serverSend("К Вам подключился наш агент - " +
+                                    agent.getUser() + ". Пожалуйста, не обижайте его.");
+                            agent.getSrvSom().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser());
                             ArrayList<Message> messages = twoPersonChat.getMessages();
                             for (Message msg : messages) {
                                 agent.getSrvSom().send(msg.getJSON());
