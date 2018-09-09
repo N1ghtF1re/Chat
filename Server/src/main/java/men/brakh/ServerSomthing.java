@@ -18,7 +18,7 @@ class ServerSomthing extends Thread {
 
 
 
-
+    
     private ArrayDeque<User> agentsList = new ArrayDeque<User>();
 
     public ServerSomthing(Socket socket, Server server) throws IOException {
