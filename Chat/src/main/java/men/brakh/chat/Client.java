@@ -27,16 +27,21 @@ public abstract class Client {
      * Чтение сообщений с сервера в отдельном потоке
      */
     private class ReadMsg extends Thread {
-
+        private Boolean isKilled;
         public ReadMsg() {
+            isKilled = false;
             this.start();
+        }
+        public void kill() {
+            isKilled = true;
+            this.interrupt();
         }
         @Override
         public void run() {
 
             String str;
             try {
-                while (true) {
+                while (!isKilled) {
                     str = in.readLine(); // ждем сообщения с сервера
                     checkServerResponse(str);
                 }
@@ -50,14 +55,20 @@ public abstract class Client {
      * Ожидание ввода пользоваетлем в отдельном потоке
      */
     public class WriteMsg extends Thread {
+        private Boolean isKilled;
 
         public WriteMsg() {
+            this.isKilled = false;
             this.start();
+        }
+        public void kill() {
+            isKilled = true;
+            this.interrupt();
         }
 
         @Override
         public void run() {
-            while (true) {
+            while (!isKilled) {
                 String answer;
                 Scanner scan = new Scanner(System.in);
                 answer = scan.nextLine();
@@ -102,8 +113,8 @@ public abstract class Client {
 
 
     public void killThreads() {
-        readThread.interrupt();
-        writeThread.interrupt();
+        readThread.kill();
+        writeThread.kill();
     }
 
 
