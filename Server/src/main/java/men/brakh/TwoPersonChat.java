@@ -1,24 +1,38 @@
 package men.brakh;
 
+import men.brakh.chat.Message;
 import men.brakh.chat.User;
 
+import java.util.ArrayList;
+
 public class TwoPersonChat {
-    private User customer;
-    private User agent;
+    private ExtendUser customer;
+    private ExtendUser agent;
+    private ArrayList<Message> messages = new ArrayList<Message>();
 
-    public TwoPersonChat(User customer) {
-        this.customer = customer;
+    public TwoPersonChat(User customer, ServerSomthing srvSmth) {
+        this.customer = new ExtendUser(customer, srvSmth);
+        this.agent = null;
     }
 
-    public User getCustomer() {
+    public ExtendUser getCustomer() {
         return customer;
+
     }
 
-    public User getAgent() {
+    public ExtendUser getAgent() {
         return agent;
     }
 
-    public void setAgent(User agent) {
+    public void addMessage(Message message) {
+        messages.add(message);
+    }
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setAgent(ExtendUser agent) {
         this.agent = agent;
     }
+
 }

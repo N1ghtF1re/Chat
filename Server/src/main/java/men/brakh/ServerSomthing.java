@@ -2,6 +2,7 @@ package men.brakh;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
+import men.brakh.chat.UsersTypes;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,6 +18,7 @@ class ServerSomthing extends Thread {
 
 
 
+
     private ArrayDeque<User> agentsList = new ArrayDeque<User>();
 
     public ServerSomthing(Socket socket, Server server) throws IOException {
@@ -26,7 +28,51 @@ class ServerSomthing extends Thread {
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         this.server = server;
 
+
         start(); // вызываем run()
+    }
+
+    void usersHandler(Message userMessage) {
+        CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
+        if (chat.searchCustomer(userMessage.getUser()) == null) { // Если в очереди чатов еще нет этого пользователя => создаем чат
+            chat.add(userMessage.getUser(), this);
+
+            TwoPersonChat userchat = server.customerChatQueue.searchCustomer(userMessage.getUser());
+            userchat.addMessage(userMessage);
+
+            Message msg = new Message(new User("Server"), "Ваш запрос принят. Ожидайте подключения специалиста");
+            this.send(msg.getJSON()); // отослать принятое сообщение с
+
+            System.out.println("Added: " + userMessage.getUser());
+        } else { // У пользователя уже есть созданный чат
+            TwoPersonChat currChat = chat.searchCustomer(userMessage.getUser()); // Получаем текущий чат
+            if (currChat.getAgent() != null) { // Если в чате уже есть агент => отправляем ему
+                currChat.getAgent().getSrvSom().send(userMessage.getJSON());
+            }
+            currChat.addMessage(userMessage); // Сохраняем историю сообшений
+        }
+    }
+
+    void agentsHandler(Message userMessage){
+        if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях
+                && (server.agentsQueue.searchAgent(userMessage.getUser()) == null)){
+            server.agentsQueue.add(userMessage.getUser(), this);
+        } else {
+            CustomerChatQueue chat = server.customerChatQueue;
+            if (chat != null) {
+                TwoPersonChat currChat = chat.searchAgent(userMessage.getUser());
+                if (currChat == null) {
+                    return;
+                }
+                if (!userMessage.getStatus().equals("ok")) {
+                    return;
+                }
+                if (currChat.getCustomer() != null) {
+                    currChat.getCustomer().getSrvSom().send(userMessage.getJSON());
+                }
+                currChat.addMessage(userMessage); // Сохраняем историю сообшений
+            }
+        }
     }
 
     @Override
@@ -38,13 +84,13 @@ class ServerSomthing extends Thread {
                 word = in.readLine();
                 if (word != null) {
                     Message userMessage = Message.decodeJSON(word);
-                    if (server.customerChatQueue.searchAgent(userMessage.getUser()) == null) {
-                        server.customerChatQueue.add(userMessage.getUser());
-                        System.out.println("Added: " + userMessage.getUser());
+                    if (userMessage.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
+                        usersHandler(userMessage);
+                    } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) {
+                        agentsHandler(userMessage);
                     }
                     System.out.println(word);
-                    Message msg = new Message(new User("Server"), "Ответ сервера на " + userMessage.getMessage());
-                    this.send(msg.getJSON()); // отослать принятое сообщение с
+
                 }
             }
 
@@ -52,7 +98,7 @@ class ServerSomthing extends Thread {
         }
     }
 
-    synchronized  private void send(String msg) {
+    synchronized void send(String msg) {
         try {
             out.write(msg + "\n");
             out.flush();
