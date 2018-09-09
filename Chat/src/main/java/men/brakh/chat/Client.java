@@ -164,6 +164,14 @@ public abstract class Client {
 
     }
 
+    public void quit() {
+        try {
+            sendMessage(new Message(this.getUser(), "", "exit").getJSON());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public User getUser() {
         return user;
     }
