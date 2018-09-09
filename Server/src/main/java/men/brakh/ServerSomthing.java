@@ -55,7 +55,7 @@ class ServerSomthing extends Thread {
     /**
      * Обработчик сообщений клиента
      * @param userMessage сообщение пользователя
-     * @return false если надо разорвать сообщения
+     * @return false если надо разорвать соединение
      */
     Boolean usersHandler(Message userMessage) {
 
@@ -86,11 +86,35 @@ class ServerSomthing extends Thread {
         return true;
     }
 
+    void removeAgentFromChat(User agent) {
+        TwoPersonChat chat = server.customerChatQueue.searchAgent(agent);
+        if (chat == null) {
+            return;
+        }
+        chat.setAgent(null);
+        chat.getCustomer().getSrvSom().serverSend("Агент " + agent + " отключился от Вас. Ждите, пока подключится следующий агент");
+        server.agentsQueue.add(agent, this);
+    }
+
+    void removeAgentFromQueue(User agent) {
+        server.agentsQueue.remove(agent);
+    }
     /**
      * Обработчик сообщений агента
-     * @param userMessage сообщение агента
+     * @param userMessage сообщение
+     * @return false если надо разорвать соединение
      */
-    void agentsHandler(Message userMessage){
+    Boolean agentsHandler(Message userMessage){
+
+        if (userMessage.getStatus().equals("exit")) { // Агент выходит из ВСЕГО чата
+            serverSend("Вы отключились от сервера", "exit");
+            synchronized (server.agentsQueue) { // Защищаемся от того, что таймер поиска свободных агентов может "излвечь" и перенаправить "выходящего" агента
+                removeAgentFromChat(userMessage.getUser());
+                removeAgentFromQueue(userMessage.getUser());
+            }
+            return false;
+        } 
+
         if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях
                 && (server.agentsQueue.searchAgent(userMessage.getUser()) == null)){
             server.agentsQueue.add(userMessage.getUser(), this);
@@ -99,10 +123,10 @@ class ServerSomthing extends Thread {
             if (chat != null) {
                 TwoPersonChat currChat = chat.searchAgent(userMessage.getUser());
                 if (currChat == null) {
-                    return;
+                    return true;
                 }
                 if (!userMessage.getStatus().equals("ok")) {
-                    return;
+                    return true;
                 }
                 if (currChat.getCustomer() != null) {
                     currChat.getCustomer().getSrvSom().send(userMessage.getJSON());
@@ -110,6 +134,7 @@ class ServerSomthing extends Thread {
                 currChat.addMessage(userMessage); // Сохраняем историю сообшений
             }
         }
+        return true;
     }
 
     @Override
@@ -127,7 +152,9 @@ class ServerSomthing extends Thread {
                             break;
                         };
                     } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) { // На сервер написал агент
-                        agentsHandler(userMessage);
+                        if (!agentsHandler(userMessage)) {
+                            break;
+                        }
                     }
                     System.out.println(word);
 

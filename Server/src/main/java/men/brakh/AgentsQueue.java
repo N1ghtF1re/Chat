@@ -50,6 +50,18 @@ public class AgentsQueue {
     }
 
     /**
+     * Удаление агента из списка
+     * @param agent Объект агента
+     */
+    public void remove(User agent) {
+        for (ExtendUser currAgent : queue) {
+            if (currAgent.getUser().equal(agent)) {
+                queue.remove(currAgent);
+            }
+        }
+    }
+
+    /**
      * Получечение первого агета в очереди (с удалением из очереди)
      * @return объкт агента
      */
