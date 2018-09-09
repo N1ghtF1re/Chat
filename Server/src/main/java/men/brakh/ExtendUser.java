@@ -2,6 +2,10 @@ package men.brakh;
 
 import men.brakh.chat.User;
 
+/**
+ * Расширенный объект пользователя
+ * (User + ServerSomthing)
+ */
 class ExtendUser {
     private User user;
     private ServerSomthing srvSom;

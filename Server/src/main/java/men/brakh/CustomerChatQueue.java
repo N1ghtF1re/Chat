@@ -4,6 +4,9 @@ import men.brakh.chat.User;
 
 import java.util.ArrayDeque;
 
+/**
+ * Очередь чатов пользователей
+ */
 public class CustomerChatQueue {
     private ArrayDeque<TwoPersonChat> queue = new ArrayDeque<TwoPersonChat>();
 

@@ -32,21 +32,29 @@ class ServerSomthing extends Thread {
         start(); // вызываем run()
     }
 
+    /**
+     * Удаляем чат с пользователем
+     * @param user объект пользователя
+     */
     void removeCustomerChatElement(User user) {
-        TwoPersonChat chat = server.customerChatQueue.searchCustomer(user);
+        TwoPersonChat chat = server.customerChatQueue.searchCustomer(user); // Получаем чат пользователя
         ExtendUser agent = chat.getAgent();
         chat.setAgent(null);
 
-        server.customerChatQueue.remove(chat);
-        server.agentsQueue.add(agent);
-        agent.getSrvSom().serverSend(user.getName() + " disconnected");
+        server.customerChatQueue.remove(chat); // Удаляем объект чата из очереди
+        server.agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
+        agent.getSrvSom().serverSend(user.getName() + " disconnected"); // Сообщаем агенту что его пользователь отключился
     }
 
+    /**
+     * Обработчик сообщений клиента
+     * @param userMessage сообщение пользователя
+     */
     void usersHandler(Message userMessage) {
 
-        if (userMessage.getStatus().equals("exit")) {
+        if (userMessage.getStatus().equals("exit")) { // Пользователь захотел отключиться
             serverSend("Вы отключились от сервера", "exit");
-            removeCustomerChatElement(userMessage.getUser());
+            removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
             return;
         }
 
@@ -70,6 +78,10 @@ class ServerSomthing extends Thread {
         }
     }
 
+    /**
+     * Обработчик сообщений агента
+     * @param userMessage сообщение агента
+     */
     void agentsHandler(Message userMessage){
         if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях
                 && (server.agentsQueue.searchAgent(userMessage.getUser()) == null)){
@@ -104,7 +116,7 @@ class ServerSomthing extends Thread {
 
                     if (userMessage.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
                         usersHandler(userMessage);
-                    } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) {
+                    } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) { // На сервер написал агент
                         agentsHandler(userMessage);
                     }
                     System.out.println(word);
@@ -116,20 +128,39 @@ class ServerSomthing extends Thread {
         }
     }
 
+    /**
+     * Отправка сообщения клиенту
+     * @param msg JSON сообщения
+     */
     synchronized void send(String msg) {
         try {
             out.write(msg + "\n");
             out.flush();
         } catch (IOException ignored) {}
     }
+
+    /**
+     * Отправка сообщения клиенту
+     * @param msg Объект сообщения
+     */
     void send(Message msg) {
         send(msg.getJSON());
     }
 
+    /**
+     * Отправка сообщения от имени сервера
+     * @param strMsg Сообщение
+     * @param status Статус (по умолчанию "ok")
+     */
     void serverSend(String strMsg, String status) {
         Message message = new Message(new User("Server"),strMsg, status);
         send(message.getJSON());
     }
+
+    /**
+     * Отправка сообщения от имени сервера
+     * @param strMsg Сообщение
+     */
     void serverSend(String strMsg) {
         serverSend(strMsg, "ok");
     }

@@ -19,6 +19,9 @@ public class Server {
     public CustomerChatQueue customerChatQueue;
     public AgentsQueue agentsQueue;
 
+    /**
+     * Поиск свободных агентов
+     */
     private class checkFreeAgents extends Thread {
 
         public checkFreeAgents() {
@@ -30,16 +33,22 @@ public class Server {
 
             timer.schedule( new TimerTask() {
                 public void run() {
-                    ExtendUser agent = agentsQueue.getFirst();
+                    ExtendUser agent = agentsQueue.getFirst(); // Получаем первого свободного агента
                     if (agent != null) {
-                        TwoPersonChat twoPersonChat = customerChatQueue.getFree();
+                        TwoPersonChat twoPersonChat = customerChatQueue.getFree(); // Ищем чат с пользователем, которому нужна помощь
                         if (twoPersonChat != null) {
-                            agent = agentsQueue.poll();
+                            agent = agentsQueue.poll(); // Извлекаем агента из очереди с удалением
                             System.out.println(agent.getUser());
-                            twoPersonChat.setAgent(agent);
+                            twoPersonChat.setAgent(agent); // Привязываем агента к пользователю
+
+                            // Сообщаем пользователю что нашли ему агента
                             twoPersonChat.getCustomer().getSrvSom().serverSend("К Вам подключился наш агент - " +
                                     agent.getUser() + ". Пожалуйста, не обижайте его.");
+
+                            // Сообщаем агенту что нашли ему пользователя
                             agent.getSrvSom().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser());
+
+                            // Отправляем агенту все предыдущие сообщения чата
                             ArrayList<Message> messages = twoPersonChat.getMessages();
                             for (Message msg : messages) {
                                 agent.getSrvSom().send(msg.getJSON());
