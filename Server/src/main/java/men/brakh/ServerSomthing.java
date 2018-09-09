@@ -38,24 +38,31 @@ class ServerSomthing extends Thread {
      */
     void removeCustomerChatElement(User user) {
         TwoPersonChat chat = server.customerChatQueue.searchCustomer(user); // Получаем чат пользователя
+        if (chat == null) {
+            return;
+        }
         ExtendUser agent = chat.getAgent();
         chat.setAgent(null);
 
         server.customerChatQueue.remove(chat); // Удаляем объект чата из очереди
-        server.agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
-        agent.getSrvSom().serverSend(user.getName() + " disconnected"); // Сообщаем агенту что его пользователь отключился
+        if (agent != null) {
+            server.agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
+            agent.getSrvSom().serverSend(user.getName() + " disconnected"); // Сообщаем агенту что его пользователь отключился
+        }
+
     }
 
     /**
      * Обработчик сообщений клиента
      * @param userMessage сообщение пользователя
+     * @return false если надо разорвать сообщения
      */
-    void usersHandler(Message userMessage) {
+    Boolean usersHandler(Message userMessage) {
 
         if (userMessage.getStatus().equals("exit")) { // Пользователь захотел отключиться
             serverSend("Вы отключились от сервера", "exit");
             removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
-            return;
+            return false;
         }
 
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
@@ -76,6 +83,7 @@ class ServerSomthing extends Thread {
             }
             currChat.addMessage(userMessage); // Сохраняем историю сообшений
         }
+        return true;
     }
 
     /**
@@ -115,7 +123,9 @@ class ServerSomthing extends Thread {
                     Message userMessage = Message.decodeJSON(word);
 
                     if (userMessage.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
-                        usersHandler(userMessage);
+                        if (!usersHandler(userMessage)) {
+                            break;
+                        };
                     } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) { // На сервер написал агент
                         agentsHandler(userMessage);
                     }
