@@ -16,13 +16,15 @@ public class CustomerClient extends men.brakh.chat.Client {
 
     public void checkAnswer(Message message) {
         String strMessage = message.getMessage();
-        if ((strMessage.length() != 0) && (strMessage.charAt(0) == '!')) {
+        if ((strMessage.length() != 0) && (strMessage.charAt(0) == '!')) { // Команды
             String[] words = strMessage.split(" ");
             if ((words.length == 2) && (words[0].equals("!register"))) {
                 registerUser(words[1]);
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
-
+                if(words[0].equals("!exit")) {
+                    quit();
+                }
             }
         } else if (getUser() != null) {
             try {
