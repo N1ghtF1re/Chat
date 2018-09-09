@@ -47,7 +47,7 @@ class ServerSomthing extends Thread {
         server.customerChatQueue.remove(chat); // Удаляем объект чата из очереди
         if (agent != null) {
             server.agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
-            agent.getSrvSom().serverSend(user.getName() + " disconnected"); // Сообщаем агенту что его пользователь отключился
+            agent.getSrvSom().serverSend(user.getName() + " отключился от Вас :C"); // Сообщаем агенту что его пользователь отключился
         }
 
     }
@@ -63,6 +63,10 @@ class ServerSomthing extends Thread {
             serverSend("Вы отключились от сервера", "exit");
             removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
             return false;
+        } else if(userMessage.getStatus().equals("leave")) { // Пользователь захотел отключиться
+            serverSend("Вы отключились от агента. Чтобы подключиться к новому агенту - напишите сообщение в чат", "ok");
+            removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
+            return true;
         }
 
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов

@@ -24,6 +24,12 @@ public class CustomerClient extends men.brakh.chat.Client {
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) {
                     quit();
+                } else if(words[0].equals("!leave")) {
+                    try {
+                        sendMessage(new Message(getUser(), "", "leave").getJSON());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } else if (getUser() != null) {
