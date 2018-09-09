@@ -32,7 +32,24 @@ class ServerSomthing extends Thread {
         start(); // вызываем run()
     }
 
+    void removeCustomerChatElement(User user) {
+        TwoPersonChat chat = server.customerChatQueue.searchCustomer(user);
+        ExtendUser agent = chat.getAgent();
+        chat.setAgent(null);
+
+        server.customerChatQueue.remove(chat);
+        server.agentsQueue.add(agent);
+
+        agent.getSrvSom().send(new Message(new User("Server"), user.getName() + " disconnected").getJSON());
+    }
+
     void usersHandler(Message userMessage) {
+
+        if (userMessage.getStatus().equals("exit")) {
+            send(new Message(new User("System"), "Вы отключились от сервера").getJSON());
+            removeCustomerChatElement(userMessage.getUser());
+        }
+
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
         if (chat.searchCustomer(userMessage.getUser()) == null) { // Если в очереди чатов еще нет этого пользователя => создаем чат
             chat.add(userMessage.getUser(), this);
@@ -84,6 +101,7 @@ class ServerSomthing extends Thread {
                 word = in.readLine();
                 if (word != null) {
                     Message userMessage = Message.decodeJSON(word);
+
                     if (userMessage.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
                         usersHandler(userMessage);
                     } else if (userMessage.getUser().getUserType() == UsersTypes.AGENT) {

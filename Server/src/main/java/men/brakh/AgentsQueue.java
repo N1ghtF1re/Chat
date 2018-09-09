@@ -11,6 +11,9 @@ public class AgentsQueue {
     public void add(User user, ServerSomthing socket) {
         queue.addLast(new ExtendUser(user, socket));
     }
+    public void add(ExtendUser user) {
+        queue.addLast(user);
+    }
     public ExtendUser getFirst() {
         return queue.peekFirst();
     }

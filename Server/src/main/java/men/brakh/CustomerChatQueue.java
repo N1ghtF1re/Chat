@@ -42,4 +42,7 @@ public class CustomerChatQueue {
         }
         return null;
     }
+    public void remove(TwoPersonChat chat) {
+        queue.remove(chat);
+    }
 }
