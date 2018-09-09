@@ -86,6 +86,10 @@ class ServerSomthing extends Thread {
         return true;
     }
 
+    /**
+     * Удаление агента из чата с пользователем и добавление его в общую очередь агентов
+     * @param agent Объект агента
+     */
     void removeAgentFromChat(User agent) {
         TwoPersonChat chat = server.customerChatQueue.searchAgent(agent);
         if (chat == null) {
@@ -96,6 +100,10 @@ class ServerSomthing extends Thread {
         server.agentsQueue.add(agent, this);
     }
 
+    /**
+     * Удаление агента из очереди
+     * @param agent Объект агента
+     */
     void removeAgentFromQueue(User agent) {
         server.agentsQueue.remove(agent);
     }
@@ -113,7 +121,13 @@ class ServerSomthing extends Thread {
                 removeAgentFromQueue(userMessage.getUser());
             }
             return false;
-        } 
+        }else if(userMessage.getStatus().equals("skip")) {
+            serverSend("Вы отключились от пользователя.");
+            synchronized (server.agentsQueue) {
+                removeAgentFromChat(userMessage.getUser());
+            }
+            return true;
+        }
 
         if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях
                 && (server.agentsQueue.searchAgent(userMessage.getUser()) == null)){

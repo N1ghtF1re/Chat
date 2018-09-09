@@ -29,6 +29,12 @@ public class AgentClient extends men.brakh.chat.Client{
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) {
                     quit();
+                } else if(words[0].equals("!skip")) {
+                    try {
+                        sendMessage(new Message(this.getUser(), "", "skip").getJSON());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } else if (getUser() != null) {
