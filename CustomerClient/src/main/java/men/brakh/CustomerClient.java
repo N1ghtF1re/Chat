@@ -8,7 +8,7 @@ import java.io.IOException;
 public class CustomerClient extends men.brakh.chat.Client {
 
     final static String ip = "localhost";
-    public static int port = 9999;
+    public static int port = 7777;
 
     public CustomerClient(String ip, int port) throws IOException {
         super(ip, port);
