@@ -5,6 +5,8 @@
 
 package men.brakh.chat;
 
+import men.brakh.logger.Logger;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -23,6 +25,49 @@ public abstract class Client {
 
     private ReadMsg readThread;
     private WriteMsg writeThread;
+
+    private Logger logger;
+
+    /**
+     * Создание объекта клиента
+     * @param ip IP сервера
+     * @param port Порт сервера
+     * @throws IOException
+     */
+    public Client(String ip, int port) throws IOException {
+        initSocket(ip, port);
+        readThread = new ReadMsg();
+        writeThread = new WriteMsg();
+
+        logger = new Logger();
+        log("Client is open");
+
+        try {
+            readThread.join();
+            writeThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void log(String message) {
+        try {
+            logger.write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void log(Exception e) {
+        try {
+            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
+        } catch (IOException e2) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Чтение сообщений с сервера в отдельном потоке
      */
@@ -46,7 +91,7 @@ public abstract class Client {
                     checkServerResponse(str);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log(e);
             }
         }
     }
@@ -77,7 +122,7 @@ public abstract class Client {
                 try {
                     out.flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log(e);
                 }
 
 
@@ -90,9 +135,14 @@ public abstract class Client {
      * @param message - json сообщения
      * @throws IOException
      */
-    public void sendMessage(String message) throws IOException {
-        out.write(message + "\n");
-        out.flush();
+    public void sendMessage(String message){
+        try {
+            out.write(message + "\n");
+            out.flush();
+        } catch (IOException e) {
+            log(e);
+        }
+
     }
 
     /**
@@ -108,6 +158,7 @@ public abstract class Client {
      */
     public void showMessage(User user, String message) {
 
+        log("Message from " + user + ": " + message);
         System.out.printf("[%s] %s%n", user, message);
     }
 
@@ -154,33 +205,10 @@ public abstract class Client {
         this.user = new User(username);
     }
 
-    /**
-     * Создание объекта клиента
-     * @param ip IP сервера
-     * @param port Порт сервера
-     * @throws IOException
-     */
-    public Client(String ip, int port) throws IOException {
-        initSocket(ip, port);
-        readThread = new ReadMsg();
-        writeThread = new WriteMsg();
-
-
-        try {
-            readThread.join();
-            writeThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public void quit() {
-        try {
-            sendMessage(new Message(this.getUser(), "", "exit").getJSON());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log("Client is closed");
+        sendMessage(new Message(this.getUser(), "", "exit").getJSON());
     }
 
     public User getUser() {

@@ -32,19 +32,12 @@ public class CustomerClient extends men.brakh.chat.Client {
                 if(words[0].equals("!exit")) { // Выход из системы
                     quit();
                 } else if(words[0].equals("!leave")) { // Отключение от чата
-                    try {
-                        sendMessage(new Message(getUser(), "", "leave").getJSON());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    sendMessage(new Message(getUser(), "", "leave").getJSON());
+                    log("User Leave");
                 }
             }
         } else if (getUser() != null) {  // Если это команда - просто отправляем сообщение собеседнику
-            try {
-                sendMessage(message.getJSON());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendMessage(message.getJSON());
             showMessage(message.getUser(), message.getMessage()); // Отображаем отправленное сообщение
         }
     }
@@ -56,6 +49,7 @@ public class CustomerClient extends men.brakh.chat.Client {
      */
     @Override
     public void registerUser(String username) {
+        log("Customer " + username + " registered in system");
         setUser(new Customer(username));
     }
 

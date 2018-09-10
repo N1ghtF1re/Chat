@@ -41,6 +41,6 @@ public class Logger {
         Logger logger = new Logger(true);
         logger.write("Lol");
     }
-    
+
 
 }

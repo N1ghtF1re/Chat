@@ -32,19 +32,12 @@ public class AgentClient extends men.brakh.chat.Client{
                 if(words[0].equals("!exit")) { // Выход из приложения
                     quit();
                 } else if(words[0].equals("!skip")) { // Переключение на другого пользователя
-                    try {
-                        sendMessage(new Message(this.getUser(), "", "skip").getJSON());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    sendMessage(new Message(this.getUser(), "", "skip").getJSON());
+                    log("Skip customer");
                 }
             }
         } else if (getUser() != null) { // Если это команда - просто отправляем сообщение собеседнику
-            try {
-                sendMessage(message.getJSON());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendMessage(message.getJSON());
             showMessage(message.getUser(), message.getMessage()); // Отображение отправленного сообщения
         }
     }
@@ -56,12 +49,9 @@ public class AgentClient extends men.brakh.chat.Client{
     @Override
     public void registerUser(String username) {
         setUser(new Agent(username));
-        try {
-            sendMessage(new Message(getUser(), "", "reg").getJSON()); // Отправляем сообщение
-            // Что агент открыт для "подключений" на сервер
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log("Agent " + username + " registered in system");
+        sendMessage(new Message(getUser(), "", "reg").getJSON()); // Отправляем сообщение
+        // Что агент открыт для "подключений" на сервер
     }
 
     public static void main(String args[]) {
