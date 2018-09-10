@@ -19,4 +19,9 @@ class ExtendUser {
     public ServerSomthing getSrvSom() {
         return srvSom;
     }
+
+    @Override
+    public String toString() {
+        return this.getUser().toString();
+    }
 }

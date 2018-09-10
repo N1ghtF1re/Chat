@@ -76,7 +76,7 @@ class ServerSomthing extends Thread {
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
         if (chat.searchCustomer(userMessage.getUser()) == null) { // Если в очереди чатов еще нет этого пользователя => создаем чат
             chat.add(userMessage.getUser(), this);
-            server.log("Customer " + userMessage.getUser() +" awaiting response");
+            server.log("Customer " + userMessage.getUser() +" awaiting response. Message: " + userMessage.getMessage());
 
             TwoPersonChat userchat = server.customerChatQueue.searchCustomer(userMessage.getUser());
             userchat.addMessage(userMessage);

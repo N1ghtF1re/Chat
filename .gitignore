@@ -6,3 +6,5 @@ CustomerClient/.idea
 CustomerClient/target
 *.iml
 .idea
+*.log
+AgentClient/target
