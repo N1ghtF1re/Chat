@@ -1,7 +1,7 @@
 package men.brakh;
 
 import men.brakh.chat.Message;
-import men.brakh.chat.User;
+import men.brakh.logger.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,6 +18,7 @@ public class Server {
 
     public CustomerChatQueue customerChatQueue;
     public AgentsQueue agentsQueue;
+    private Logger logger;
 
     /**
      * Поиск свободных агентов
@@ -40,6 +41,8 @@ public class Server {
                             agent = agentsQueue.poll(); // Извлекаем агента из очереди с удалением
                             System.out.println(agent.getUser());
                             twoPersonChat.setAgent(agent); // Привязываем агента к пользователю
+
+                            log("Agent " + agent.getUser() + " connected to customer " + twoPersonChat.getCustomer().getUser());
 
                             // Сообщаем пользователю что нашли ему агента
                             twoPersonChat.getCustomer().getSrvSom().serverSend("К Вам подключился наш агент - " +
@@ -66,15 +69,19 @@ public class Server {
         customerChatQueue = new CustomerChatQueue();
         agentsQueue = new AgentsQueue();
         ServerSocket server = new ServerSocket(PORT);
+        logger = new Logger(true);
         new checkFreeAgents();
+        log("Server start job");
         try {
             while (true) {
                 // Блокируется до возникновения нового соединения:
                 Socket socket = server.accept();
                 try {
+                    log("New connection: " + socket.toString());
                     serverList.add(new ServerSomthing(socket, this)); // добавить новое соединенние в список
 
                 } catch (IOException e) {
+                    log(e);
                     // Если завершится неудачей, закрывается сокет,
                     // в противном случае, нить закроет его при завершении работы:
                     socket.close();
@@ -84,6 +91,23 @@ public class Server {
             server.close();
         }
     }
+
+    synchronized public void log(String message) {
+        try {
+            logger.write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    synchronized public void log(Exception e) {
+        try {
+            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
+        } catch (IOException e2) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) throws IOException {
         new Server();
