@@ -29,17 +29,12 @@ public class Logger {
     public void write(String message) throws IOException {
         Date currDate = new Date();
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String logMessage = "[" + dt.format(currDate) + "] " + message + "\n";
-        out.write(logMessage);
+        String logMessage = "[" + dt.format(currDate) + "] " + message;
+        out.write(logMessage + "\n");
         out.flush();
         if(isWriteToConsole) {
             System.out.println(logMessage);
         }
-    }
-
-    public static void main(String args[]) throws IOException {
-        Logger logger = new Logger(true);
-        logger.write("Lol");
     }
 
 

@@ -107,6 +107,7 @@ class ServerSomthing extends Thread {
         }
         chat.setAgent(null);
         chat.getCustomer().getSrvSom().serverSend("Агент " + agent + " отключился от Вас. Ждите, пока подключится следующий агент");
+        server.log("Agent " + agent + " has disconnected from " + chat.getCustomer());
         server.agentsQueue.add(agent, this);
         server.log("Agent " + agent + " added to the end of the queue");
     }
