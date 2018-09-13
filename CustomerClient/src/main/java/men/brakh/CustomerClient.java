@@ -27,6 +27,7 @@ public class CustomerClient extends men.brakh.chat.Client {
             String[] words = strMessage.split(" "); // Разделяем команду на слова
             if ((getUser() == null) && (words.length == 2) && (words[0].equals("!register"))) { // Регистрация пользователя
                 registerUser(words[1]);
+                sendMessage(new Message(getUser(), "", "reg").getJSON());
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) { // Выход из системы

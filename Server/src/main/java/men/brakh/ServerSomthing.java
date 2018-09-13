@@ -71,6 +71,10 @@ class ServerSomthing extends Thread {
             serverSend("Вы отключились от агента. Чтобы подключиться к новому агенту - напишите сообщение в чат", "ok");
             removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
             return true;
+        } else if(userMessage.getStatus().equals("reg")) {
+            server.log("New registration: " + userMessage.getUser());
+            serverSend(String.valueOf(server.getNewId()), "reg");
+            return true;
         }
 
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
@@ -141,6 +145,14 @@ class ServerSomthing extends Thread {
             }
             server.log("Agent " + userMessage.getUser() + " skip customer");
             return true;
+        }else if(userMessage.getStatus().equals("reg")) {
+            server.log("New registration: " + userMessage.getUser());
+            int newId = server.getNewId();
+            serverSend(String.valueOf(newId), "reg");
+            User agent = userMessage.getUser();
+            agent.setId(newId); // Меняем id с -1 на новый
+            userMessage.setUser(agent);
+
         }
 
         if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях

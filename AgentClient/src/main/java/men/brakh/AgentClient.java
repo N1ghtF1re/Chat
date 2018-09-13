@@ -26,7 +26,6 @@ public class AgentClient extends men.brakh.chat.Client{
             String[] words = strMessage.split(" ");
             if ((words.length == 2) && (words[0].equals("!register"))) { // Регистрация агента в клиенте
                 registerUser(words[1]);
-
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) { // Выход из приложения

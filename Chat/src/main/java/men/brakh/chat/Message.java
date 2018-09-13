@@ -1,10 +1,6 @@
 package men.brakh.chat;
 
-
-
 import com.google.gson.Gson;
-
-import java.io.IOException;
 
 public class Message {
     private User user; // Объект пользователя
@@ -51,17 +47,5 @@ public class Message {
         Gson gson = new Gson();
         return gson.fromJson(json, Message.class);
     }
-
-    /*
-    public static void main(String args[]) {
-        Message message = new Message(new User("ek"), "Message");
-
-        try {
-            System.out.println(Message.decodeJSON( message.getJSON() ).getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
 
 }
