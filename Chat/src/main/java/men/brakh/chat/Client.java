@@ -45,7 +45,8 @@ public abstract class Client {
 
         logger = new Logger();
         log("Client is open");
-
+    }
+    public void join() {
         try {
             readThread.join();
             writeThread.join();
@@ -106,7 +107,11 @@ public abstract class Client {
             try {
                 while (!isKilled) {
                     str = in.readLine(); // ждем сообщения с сервера
-                    checkServerResponse(str);
+                    try {
+                        checkServerResponse(str);
+                    } catch (Exception e) {
+                        log(e);
+                    }
                 }
             } catch (IOException e) {
                 log(e);
@@ -212,7 +217,6 @@ public abstract class Client {
         this.user = new User(username);
     }
     public void setUserId(int id) {
-        System.out.println(id);
         user.setId(id);
     }
 
