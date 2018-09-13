@@ -28,14 +28,18 @@ public abstract class Client {
 
     private Logger logger;
 
+
     /**
-     * Создание объекта клиента
-     * @param ip IP сервера
-     * @param port Порт сервера
+     * Начало работы клиента
+     * @param socket Socket
      * @throws IOException
      */
-    public Client(String ip, int port) throws IOException {
-        initSocket(ip, port);
+    public void start(Socket socket) throws IOException {
+        clientSocket = socket;
+
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+
         readThread = new ReadMsg();
         writeThread = new WriteMsg();
 
@@ -48,8 +52,22 @@ public abstract class Client {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Создание объекта клиента
+     * @param ip IP сервера
+     * @param port Порт сервера
+     * @throws IOException
+     */
+    public Client(String ip, int port) throws IOException {
+        Socket socket = new Socket(ip, port);
+        start(socket);
+    }
+    public Client() {
 
     }
+
 
     public void log(String message) {
         try {
@@ -183,28 +201,20 @@ public abstract class Client {
             killThreads();
             showMessage(message.getUser(), message.getMessage());
             showMessage(new User("System"), "Connection closed");
+        } else if("reg".equals(status)) {
+            setUserId(Integer.parseInt(message.getMessage()));
         }
     }
 
 
-    /**
-     * Инициализация соекта клиента
-     * @param ip IP сервера
-     * @param port Порт сервера
-     * @throws IOException
-     */
-    private void initSocket(String ip, int port) throws IOException {
-
-        clientSocket = new Socket(ip, port);
-
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-    }
 
     public void registerUser(String username) {
         this.user = new User(username);
     }
-
+    public void setUserId(int id) {
+        System.out.println(id);
+        user.setId(id);
+    }
 
     public void quit() {
         log("Client is closed");

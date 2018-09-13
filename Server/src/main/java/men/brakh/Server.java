@@ -12,13 +12,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Server {
-
+    private int id = 0;
     public final int PORT = 7777;
     public LinkedList<ServerSomthing> serverList = new LinkedList<ServerSomthing>(); // список всех нитей
 
     public CustomerChatQueue customerChatQueue;
     public AgentsQueue agentsQueue;
     private Logger logger;
+
 
     /**
      * Поиск свободных агентов
@@ -64,6 +65,9 @@ public class Server {
         }
     }
 
+    public synchronized int getNewId() {
+        return ++id;
+    }
 
     public Server() throws IOException {
         customerChatQueue = new CustomerChatQueue();
@@ -106,6 +110,8 @@ public class Server {
         } catch (IOException e2) {
             e.printStackTrace();
         }
+
+        
     }
 
 
