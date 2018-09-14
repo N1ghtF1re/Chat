@@ -3,12 +3,15 @@ package men.brakh;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 import men.brakh.chat.UsersTypes;
+import men.brakh.data.ExtendUser;
+import men.brakh.data.TwoPersonChat;
+import men.brakh.queues.CustomerChatQueue;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayDeque;
 
-class ServerSomthing extends Thread {
+public class ServerSomthing extends Thread {
 
     private Socket socket; // сокет, через который сервер общается с клиентом,
     // кроме него - клиент и сервер никак не связаны

@@ -1,15 +1,17 @@
 package men.brakh;
 
 import men.brakh.chat.Message;
+import men.brakh.data.ExtendUser;
+import men.brakh.data.TwoPersonChat;
 import men.brakh.logger.Logger;
+import men.brakh.queues.AgentsQueue;
+import men.brakh.queues.CustomerChatQueue;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Server {
     private int id = 0;
@@ -24,24 +26,6 @@ public class Server {
     /**
      * Поиск свободных агентов
      */
-    /*
-    private class checkFreeAgents extends Thread {
-
-        public checkFreeAgents() {
-            this.start();
-        }
-        @Override
-        public void run() {
-            Timer timer = new Timer();
-
-            timer.schedule( new TimerTask() {
-                public void run() {
-
-                }
-            }, 0, 1000);
-        }
-    }
-    */
     synchronized void checkFreeAgents() {
         ExtendUser agent = agentsQueue.getFirst(); // Получаем первого свободного агента
         if (agent != null) {
@@ -125,8 +109,6 @@ public class Server {
         } catch (IOException e2) {
             e.printStackTrace();
         }
-
-        
     }
 
 

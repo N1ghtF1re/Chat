@@ -1,6 +1,8 @@
-package men.brakh;
+package men.brakh.queues;
 
+import men.brakh.ServerSomthing;
 import men.brakh.chat.User;
+import men.brakh.data.TwoPersonChat;
 
 import java.util.ArrayDeque;
 

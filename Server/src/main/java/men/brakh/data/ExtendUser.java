@@ -1,15 +1,16 @@
-package men.brakh;
+package men.brakh.data;
 
+import men.brakh.ServerSomthing;
 import men.brakh.chat.User;
 
 /**
  * Расширенный объект пользователя
  * (User + ServerSomthing)
  */
-class ExtendUser {
+public class ExtendUser {
     private User user;
     private ServerSomthing srvSom;
-    ExtendUser(User user, ServerSomthing srvSom) {
+    public ExtendUser(User user, ServerSomthing srvSom) {
         this.user = user;
         this.srvSom = srvSom;
     }
