@@ -14,6 +14,9 @@ public class CustomerChatQueue {
         queue.addLast(new TwoPersonChat(user, srvSmth));
     }
     public TwoPersonChat getFirst() {
+        if(queue.size() == 0) {
+            return null;
+        }
         return queue.getFirst();
     }
 
