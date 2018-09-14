@@ -2,6 +2,7 @@ package men.brakh;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -92,4 +93,5 @@ public class AgentClientTest {
         Message answer = sendMessageAndGetResponse("!exit");
         assertEquals(answer.getStatus(), "exit");
     }
+
 }
