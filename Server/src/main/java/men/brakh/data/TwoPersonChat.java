@@ -1,5 +1,6 @@
-package men.brakh;
+package men.brakh.data;
 
+import men.brakh.ServerSomthing;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 

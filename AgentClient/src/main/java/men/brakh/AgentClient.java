@@ -12,6 +12,11 @@ public class AgentClient extends men.brakh.chat.Client{
     final static String ip = "localhost";
     public static int port = 7777;
 
+
+    public AgentClient() {
+        super();
+    }
+
     public AgentClient(String ip, int port) throws IOException {
         super(ip, port);
     }
@@ -26,6 +31,8 @@ public class AgentClient extends men.brakh.chat.Client{
             String[] words = strMessage.split(" ");
             if ((words.length == 2) && (words[0].equals("!register"))) { // Регистрация агента в клиенте
                 registerUser(words[1]);
+                sendMessage(new Message(getUser(), "", "reg").getJSON()); // Отправляем сообщение
+                // Что агент открыт для "подключений" на сервер
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) { // Выход из приложения
@@ -49,8 +56,6 @@ public class AgentClient extends men.brakh.chat.Client{
     public void registerUser(String username) {
         setUser(new Agent(username));
         log("Agent " + username + " registered in system");
-        sendMessage(new Message(getUser(), "", "reg").getJSON()); // Отправляем сообщение
-        // Что агент открыт для "подключений" на сервер
     }
 
     public static void main(String args[]) {

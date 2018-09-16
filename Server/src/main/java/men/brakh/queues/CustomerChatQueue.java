@@ -1,6 +1,8 @@
-package men.brakh;
+package men.brakh.queues;
 
+import men.brakh.ServerSomthing;
 import men.brakh.chat.User;
+import men.brakh.data.TwoPersonChat;
 
 import java.util.ArrayDeque;
 
@@ -14,6 +16,9 @@ public class CustomerChatQueue {
         queue.addLast(new TwoPersonChat(user, srvSmth));
     }
     public TwoPersonChat getFirst() {
+        if(queue.size() == 0) {
+            return null;
+        }
         return queue.getFirst();
     }
 

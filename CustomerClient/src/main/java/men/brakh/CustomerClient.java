@@ -13,6 +13,10 @@ public class CustomerClient extends men.brakh.chat.Client {
     final static String ip = "localhost";
     public static int port = 7777;
 
+    public CustomerClient() {
+        super();
+    }
+
     public CustomerClient(String ip, int port) throws IOException {
         super(ip, port);
     }

@@ -3,12 +3,15 @@ package men.brakh;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 import men.brakh.chat.UsersTypes;
+import men.brakh.data.ExtendUser;
+import men.brakh.data.TwoPersonChat;
+import men.brakh.queues.CustomerChatQueue;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayDeque;
 
-class ServerSomthing extends Thread {
+public class ServerSomthing extends Thread {
 
     private Socket socket; // сокет, через который сервер общается с клиентом,
     // кроме него - клиент и сервер никак не связаны
@@ -65,11 +68,17 @@ class ServerSomthing extends Thread {
         if (userMessage.getStatus().equals("exit")) { // Пользователь захотел отключиться
             serverSend("Вы отключились от сервера", "exit");
             removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
+            server.checkFreeAgents();
             server.log(userMessage.getUser() + " has disconnected from the server");
             return false;
         } else if(userMessage.getStatus().equals("leave")) { // Пользователь захотел отключиться
             serverSend("Вы отключились от агента. Чтобы подключиться к новому агенту - напишите сообщение в чат", "ok");
             removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
+            server.checkFreeAgents();
+            return true;
+        } else if(userMessage.getStatus().equals("reg")) {
+            server.log("New registration: " + userMessage.getUser());
+            serverSend(String.valueOf(server.getNewId()), "reg");
             return true;
         } else if(userMessage.getStatus().equals("reg")) {
             server.log("New registration: " + userMessage.getUser());
@@ -87,7 +96,7 @@ class ServerSomthing extends Thread {
 
             String msg = "Ваш запрос принят. Ожидайте подключения специалиста";
             this.serverSend(msg); // отослать принятое сообщение с
-
+            server.checkFreeAgents();
         } else { // У пользователя уже есть созданный чат
             TwoPersonChat currChat = chat.searchCustomer(userMessage.getUser()); // Получаем текущий чат
             if (currChat.getAgent() != null) { // Если в чате уже есть агент => отправляем ему
@@ -132,11 +141,12 @@ class ServerSomthing extends Thread {
 
         if (userMessage.getStatus().equals("exit")) { // Агент выходит из ВСЕГО чата
             serverSend("Вы отключились от сервера", "exit");
-            synchronized (server.agentsQueue) { // Защищаемся от того, что таймер поиска свободных агентов может "излвечь" и перенаправить "выходящего" агента
+            synchronized (server.agentsQueue) {
                 removeAgentFromChat(userMessage.getUser());
                 removeAgentFromQueue(userMessage.getUser());
             }
             server.log("Agent " + userMessage.getUser() + " has disconnected from the server");
+            server.checkFreeAgents();
             return false;
         }else if(userMessage.getStatus().equals("skip")) {
             serverSend("Вы отключились от пользователя.");
@@ -144,6 +154,7 @@ class ServerSomthing extends Thread {
                 removeAgentFromChat(userMessage.getUser());
             }
             server.log("Agent " + userMessage.getUser() + " skip customer");
+            server.checkFreeAgents();
             return true;
         }else if(userMessage.getStatus().equals("reg")) {
             server.log("New registration: " + userMessage.getUser());
@@ -159,6 +170,7 @@ class ServerSomthing extends Thread {
                 && (server.agentsQueue.searchAgent(userMessage.getUser()) == null)){
             server.agentsQueue.add(userMessage.getUser(), this);
             server.log("Agent " + userMessage.getUser() + " added to the end of the queue");
+            server.checkFreeAgents();
         } else {
             CustomerChatQueue chat = server.customerChatQueue;
             if (chat != null) {
@@ -199,7 +211,6 @@ class ServerSomthing extends Thread {
                             break;
                         }
                     }
-                    // System.out.println(word);
 
                 }
             }
