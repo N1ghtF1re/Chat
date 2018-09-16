@@ -1,7 +1,8 @@
-package men.brakh;
+package men.brakh.customer;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
+import men.brakh.customer.CustomerClient;
 import org.junit.Before;
 import org.junit.Test;
 

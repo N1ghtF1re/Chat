@@ -1,8 +1,9 @@
-package men.brakh.queues;
+package men.brakh.server.queues;
 
-import men.brakh.ServerSomthing;
+import men.brakh.server.data.ExtendUser;
+import men.brakh.server.ServerSomthing;
 import men.brakh.chat.User;
-import men.brakh.data.ExtendUser;
+import men.brakh.server.data.ExtendUser;
 
 import java.util.ArrayDeque;
 

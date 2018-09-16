@@ -1,11 +1,11 @@
-package men.brakh;
+package men.brakh.server;
 
 import men.brakh.chat.Message;
-import men.brakh.data.ExtendUser;
-import men.brakh.data.TwoPersonChat;
+import men.brakh.server.data.ExtendUser;
+import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;
-import men.brakh.queues.AgentsQueue;
-import men.brakh.queues.CustomerChatQueue;
+import men.brakh.server.queues.AgentsQueue;
+import men.brakh.server.queues.CustomerChatQueue;
 
 import java.io.IOException;
 import java.net.ServerSocket;

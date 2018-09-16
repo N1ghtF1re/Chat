@@ -1,4 +1,4 @@
-package men.brakh;
+package men.brakh.agent;
 
 import men.brakh.chat.UsersTypes;
 

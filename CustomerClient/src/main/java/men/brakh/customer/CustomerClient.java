@@ -1,4 +1,4 @@
-package men.brakh;
+package men.brakh.customer;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
