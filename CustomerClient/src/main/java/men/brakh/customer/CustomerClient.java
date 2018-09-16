@@ -2,13 +2,13 @@ package men.brakh.customer;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
-
+import men.brakh.chat.Client;
 import java.io.IOException;
 
 /**
  * Класс клиента пользователя
  */
-public class CustomerClient extends men.brakh.chat.Client {
+public class CustomerClient extends Client {
 
     final static String ip = "localhost";
     public static int port = 7777;

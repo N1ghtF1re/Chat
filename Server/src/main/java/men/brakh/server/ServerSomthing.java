@@ -32,7 +32,7 @@ public class ServerSomthing extends Thread {
         this.server = server;
 
 
-        start(); // вызываем run()
+        //start(); // вызываем run()
     }
 
     /**

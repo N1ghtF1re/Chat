@@ -3,8 +3,6 @@ package men.brakh.server;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 import men.brakh.chat.UsersTypes;
-import men.brakh.server.Server;
-import men.brakh.server.ServerSomthing;
 import men.brakh.server.data.TwoPersonChat;
 import org.junit.Before;
 import org.junit.Test;
