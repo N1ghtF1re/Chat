@@ -46,14 +46,7 @@ public abstract class Client {
         logger = new Logger();
         log("Client is open");
     }
-    public void join() {
-        try {
-            readThread.join();
-            writeThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     /**
      * Создание объекта клиента
@@ -65,11 +58,18 @@ public abstract class Client {
         Socket socket = new Socket(ip, port);
         start(socket);
     }
+
+    /**
+     * Пустой конструктор (Для юнит тестов)
+     */
     public Client() {
 
     }
 
-
+    /**
+     * аписываем в лог сообщение
+     * @param message сообщение
+     */
     public void log(String message) {
         try {
             logger.write(message);
@@ -78,6 +78,10 @@ public abstract class Client {
         }
     }
 
+    /**
+     * Записываем в лог ошибку
+     * @param e Объект исключения
+     */
     public void log(Exception e) {
         try {
             logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
@@ -185,7 +189,9 @@ public abstract class Client {
         System.out.printf("[%s] %s%n", user, message);
     }
 
-
+    /**
+     * Убиваем потоки
+     */
     public void killThreads() {
         readThread.kill();
         writeThread.kill();
@@ -211,24 +217,25 @@ public abstract class Client {
         }
     }
 
-
-
+    /**
+     * Регистрация пользователя в клиенте
+     * @param username Имя пользователя
+     */
     public void registerUser(String username) {
         this.user = new User(username);
     }
+
+    // GETTERS AND SETTERS
     public void setUserId(int id) {
         user.setId(id);
     }
-
     public void quit() {
         log("Client is closed");
         sendMessage(new Message(this.getUser(), "", "exit").getJSON());
     }
-
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
