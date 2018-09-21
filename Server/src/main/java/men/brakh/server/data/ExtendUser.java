@@ -1,5 +1,6 @@
 package men.brakh.server.data;
 
+import men.brakh.server.Sender;
 import men.brakh.server.ServerSomthing;
 import men.brakh.chat.User;
 
@@ -9,16 +10,16 @@ import men.brakh.chat.User;
  */
 public class ExtendUser {
     private User user;
-    private ServerSomthing srvSom;
-    public ExtendUser(User user, ServerSomthing srvSom) {
+    private Sender sender;
+    public ExtendUser(User user, Sender sender) {
         this.user = user;
-        this.srvSom = srvSom;
+        this.sender = sender;
     }
     public User getUser() {
         return user;
     }
-    public ServerSomthing getSrvSom() {
-        return srvSom;
+    public Sender getSender() {
+        return sender;
     }
 
     @Override

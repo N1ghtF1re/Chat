@@ -1,6 +1,6 @@
 package men.brakh.server.data;
 
-import men.brakh.server.ServerSomthing;
+import men.brakh.server.Sender;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 
@@ -11,8 +11,8 @@ public class TwoPersonChat {
     private men.brakh.server.data.ExtendUser agent;
     private ArrayList<Message> messages = new ArrayList<Message>();
 
-    public TwoPersonChat(User customer, ServerSomthing srvSmth) {
-        this.customer = new men.brakh.server.data.ExtendUser(customer, srvSmth);
+    public TwoPersonChat(User customer, Sender sender) {
+        this.customer = new men.brakh.server.data.ExtendUser(customer, sender);
         this.agent = null;
     }
 
