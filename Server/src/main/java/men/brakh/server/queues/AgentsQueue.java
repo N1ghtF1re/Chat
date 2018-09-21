@@ -1,5 +1,6 @@
 package men.brakh.server.queues;
 
+import men.brakh.server.Sender;
 import men.brakh.server.data.ExtendUser;
 import men.brakh.server.ServerSomthing;
 import men.brakh.chat.User;
@@ -16,10 +17,10 @@ public class AgentsQueue {
     /**
      * Добавление нового агента в очередь
      * @param user Объект агента
-     * @param socket Объект соединения с пользователем
+     * @param sender Объект для связи с пользователем
      */
-    public void add(User user, ServerSomthing socket) {
-        queue.addLast(new ExtendUser(user, socket));
+    public void add(User user, Sender sender) {
+        queue.addLast(new ExtendUser(user, sender));
     }
 
     /**
