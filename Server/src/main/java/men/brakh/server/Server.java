@@ -31,7 +31,7 @@ public class Server {
     }
     public Server(int port) throws IOException {
         this();
-        startSocket(port);
+        startServer(port);
     }
 
     /**
@@ -39,13 +39,13 @@ public class Server {
      * @param port порт
      * @throws IOException
      */
-    public void startSocket(int port){
+    public void startServer(int port){
         SocketsListener socketsListener = new SocketsListener(this, port);
 
         try {
             socketsListener.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log(e);
         }
     }
 
