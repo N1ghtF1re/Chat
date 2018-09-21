@@ -5,6 +5,7 @@ import men.brakh.chat.User;
 import men.brakh.server.data.ExtendUser;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;
+import men.brakh.server.listeners.SocketsListener;
 import men.brakh.server.queues.AgentsQueue;
 import men.brakh.server.queues.CustomerChatQueue;
 
@@ -17,19 +18,16 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private int id = 0;
-    private int threadsCount = 100;
     public static final int PORT = 7777;
     public CustomerChatQueue customerChatQueue;
     public AgentsQueue agentsQueue;
     private Logger logger;
-    private ExecutorService pool;
 
 
     public Server() throws IOException {
         customerChatQueue = new CustomerChatQueue();
         agentsQueue = new AgentsQueue();
         logger = new Logger(true);
-        log("Server start job");
     }
     public Server(int port) throws IOException {
         this();
@@ -41,26 +39,13 @@ public class Server {
      * @param port порт
      * @throws IOException
      */
-    public void startSocket(int port) throws IOException {
-        ServerSocket server = new ServerSocket(port);
-        pool = Executors.newFixedThreadPool(threadsCount);
-        try {
-            while (true) {
-                // Блокируется до возникновения нового соединения:
-                Socket socket = server.accept();
-                try {
-                    log("New connection: " + socket.toString());
-                    pool.execute(new ServerSomthing(socket, this)); // добавить новое соединенние в список
+    public void startSocket(int port){
+        SocketsListener socketsListener = new SocketsListener(this, port);
 
-                } catch (IOException e) {
-                    log(e);
-                    // Если завершится неудачей, закрывается сокет,
-                    // в противном случае, нить закроет его при завершении работы:
-                    socket.close();
-                }
-            }
-        } finally {
-            server.close();
+        try {
+            socketsListener.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
