@@ -34,15 +34,14 @@ public class AgentClientTest {
         try {
             client.start(new Socket(){
                 @Override
-                public InputStream getInputStream() {
-                    in = new ByteArrayInputStream(input);
-                    return in;
-                }
-
-                @Override
                 public OutputStream getOutputStream() {
                     out = new ByteArrayOutputStream();
                     return out;
+                }
+                @Override
+                public InputStream getInputStream() {
+                    in = new ByteArrayInputStream(input);
+                    return in;
                 }
             });
         } catch (IOException e) {
