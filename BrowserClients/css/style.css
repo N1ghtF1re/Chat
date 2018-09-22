@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  padding: 0;
+
+}
+
+body:before {
+  content: "";
+  position: absolute;
+  height: 40%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: #03A9F4;
+  z-index: 1;
+}
+
+#chat {
+  display: none;
+  width: 60%;
+  margin: 0 auto;
+  z-index: 99;
+  position: relative;
+  box-shadow: 0px 0px 26px rgba(0,0,0,0.6);
+  margin-top: 40px;
+  background: #fffafa;
+  padding: 40px 30px;
+}
+
+.server-msg {
+  color: #525252;
+  text-align: center;
+}
+.customer-msg span{
+  color: green;
+}
+.agent-msg span{
+  color: blue;
+}
+
+#msg-box {
+  height: 600px;
+  overflow: auto;
+}
+
+.btn {
+  background: #2196F3;
+  color: #fff;
+  border: 0;
+  height: 30px;
+}
+.send-message {
+    width: 20%;
+}
+
+#autorisation input,
+#messageField {
+    width: 76%;
+    height: 24px;
+    padding: 1px 5px;
+    font-size: 14px;
+}
+.msg {
+    padding: 14px 0px;
+    border-bottom: 1px solid #e2e2e2;
+    text-align: center;
+}
+#autorisation {
+    display: block;
+    z-index: 9999;
+    position: absolute;
+    box-shadow: 0px 0px 26px rgba(0,0,0,0.6);
+    margin-top: 40px;
+    background: #fffafa;
+    width: 60%;
+    height: 400px;
+    top: 150px;
+    margin: 0 auto;
+    margin-left: 20%;
+    text-align: center;
+}
+#autorisation input {
+  width: 60%;
+  margin: 0 auto;
+}
+#autorisation button {
+  width: 40%;
+}
+
+#autorisation button, #autorisation input {
+  margin:  20px 0;
+}
+
+#autorisation div {
+    margin-top: 100px;
+}

@@ -1,54 +1,76 @@
-<html>
-<script src="data/User.js"></script>
-<script src="data/Message.js"></script>
-<body style="margin: 35px">
-<form>
-    <input id="messageField" type="text">
-    <input onclick="checkAnswer();" value="send" type="button">
-</form>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Agent Client</title>
+  <script src="data/User.js"></script>
+  <script src="data/Message.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-<div id="msg-box" style="width:500px; height: 400px; background: #eee; overflow:auto;"></div>
+</body>
+</html>
 
+
+<body>
+
+  <div id="autorisation">
+    <div>
+      <h2>Введите свое имя</h2>
+      <input type="text" id="login">
+      <br>
+      <button type="button" name="button" class="btn" onclick="autoris()">Принять</button>
+    </div>
+  </div>
+  
+<div id="chat">
+  <div id="msg-box"></div>
+
+  <form>
+      <input id="messageField" type="text">
+      <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
+  </form>
+</div>
 <script src="Client.js"></script>
 
 <script>
 
-    function checkAnswer() {
-        var strMessage = msgField.value;
-        try {
-            if (strMessage && (strMessage[0] == "!")) {
-              let words = strMessage.split(" ")
-              if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
-                currentUser = new User(words[1], "AGENT")
-                msg = new Message(currentUser, "", "reg")
-                showMessage(new Message(new User("Server"), "Hello, " + currentUser.name))
-                sendMsg(msg)
-              } else if (currentUser != null) {
-                if(words[0] == "!exit") {
-                  msg = new Message(currentUser, "", "exit")
-                  sendMsg(msg)
-                } else if(words[0] == "!skip") {
-                  msg = new Message(currentUser, "", "skip")
-                  sendMsg(msg)
-                }
-              }
-            } else if (currentUser != null) {
-
-              msg = new Message(currentUser, strMessage)
-              console.log(msg)
+function checkAnswer() {
+    var strMessage = msgField.value;
+    try {
+        if (strMessage && (strMessage[0] == "!")) {
+          let words = strMessage.split(" ")
+          if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
+            currentUser = new User(words[1], "AGENT")
+            msg = new Message(currentUser, "", "reg")
+            showMessage(new Message(new User("Server"), "Hello, " + currentUser.name))
+            sendMsg(msg)
+          } else if (currentUser != null) {
+            if(words[0] == "!exit") {
+              msg = new Message(currentUser, "", "exit")
               sendMsg(msg)
-              showMessage(msg)
+            } else if(words[0] == "!skip") {
+              msg = new Message(currentUser, "", "skip")
+              sendMsg(msg)
             }
+          }
+        } else if (currentUser != null) {
 
-        } catch(err) {
-          console.log(err)
+          msg = new Message(currentUser, strMessage)
+          console.log(msg)
+          sendMsg(msg)
+          showMessage(msg)
         }
-        msgField.value = "";
 
+    } catch(err) {
+      console.log(err)
     }
+    msgField.value = "";
 
-
-
+}
 
 </script>
 </body>

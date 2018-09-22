@@ -29,9 +29,7 @@ public class ChatEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
         Message msg = Message.decodeJSON(message);
-        if(msg.getStatus().equals("reg")) {
-            users.put(session, msg.getUser());
-        }
+        users.put(session, msg.getUser());
         new HandlerThread(msg, session, server);
     }
 
@@ -42,9 +40,13 @@ public class ChatEndpoint {
 
     @OnClose
     public void onClose(Session session) {
+        server.log("Session closed with id: " + session.getId());
+        if(!users.containsKey(session)) {
+            return;
+        }
         Message msg = new Message(users.get(session), "", "exit");
         new HandlerThread(msg, session, server);
-        server.log("Session closed with id: " + session.getId());
+
     }
 
 }

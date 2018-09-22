@@ -1,17 +1,36 @@
-<html>
-<script src="data/User.js"></script>
-<script src="data/Message.js"></script>
-<body style="margin: 35px">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Customer Client</title>
+  <script src="data/User.js"></script>
+  <script src="data/Message.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+</body>
+</html>
 
 
-<form>
-    <input id="messageField" type="text">
-    <input onclick="checkAnswer();" value="send" type="button">
-</form>
+<body>
 
-<div id="msg-box" style="width:500px; height: 400px; background: #eee; overflow:auto;"></div>
+<div id="autorisation">
+  <div>
+    <h2>Введите свое имя</h2>
+    <input type="text" id="login">
+    <br>
+    <button type="button" name="button" class="btn" onclick="autoris()">Принять</button>
+  </div>
+</div>
+<div id="chat">
+  <div id="msg-box"></div>
+  <input id="messageField" type="text" onkeyup="if(key(event)==13){document.getElementById('inp').click();}">
+  <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
 
-<script src="Client.js"></script>
+</div>
 
 <script>
 
@@ -23,7 +42,7 @@
               if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
                 currentUser = new User(words[1], "CUSTOMER")
                 msg = new Message(currentUser, "", "reg")
-                showMessage(new Message(new User("Server"), "Hello, " + currentUser.name))
+                showMessage(new Message(new User("Server", "NONE"), "Hello, " + currentUser.name))
                 sendMsg(msg)
               } else if (currentUser != null) {
                 if(words[0] == "!exit") {
@@ -49,9 +68,7 @@
 
     }
 
-
-
-
 </script>
+<script src="Client.js"></script>
 </body>
 </html>
