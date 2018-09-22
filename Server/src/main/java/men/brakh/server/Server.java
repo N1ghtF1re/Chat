@@ -6,16 +6,11 @@ import men.brakh.server.data.ExtendUser;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;
 import men.brakh.server.listeners.SocketsListener;
-import men.brakh.server.endpoints.ChatEndpoint;
 import men.brakh.server.listeners.WebSocketsListener;
 import men.brakh.server.queues.AgentsQueue;
 import men.brakh.server.queues.CustomerChatQueue;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.WeakHashMap;
 
 public class Server {
     private int id = 0;
