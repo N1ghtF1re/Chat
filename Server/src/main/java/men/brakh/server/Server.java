@@ -6,15 +6,16 @@ import men.brakh.server.data.ExtendUser;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;
 import men.brakh.server.listeners.SocketsListener;
+import men.brakh.server.endpoints.ChatEndpoint;
+import men.brakh.server.listeners.WebSocketsListener;
 import men.brakh.server.queues.AgentsQueue;
 import men.brakh.server.queues.CustomerChatQueue;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.WeakHashMap;
 
 public class Server {
     private int id = 0;
@@ -41,9 +42,11 @@ public class Server {
      */
     public void startServer(int port){
         SocketsListener socketsListener = new SocketsListener(this, port);
+        WebSocketsListener webSocketsListener = new WebSocketsListener(this);
 
         try {
             socketsListener.join();
+            webSocketsListener.join();
         } catch (InterruptedException e) {
             log(e);
         }
