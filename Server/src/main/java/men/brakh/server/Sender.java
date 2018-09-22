@@ -10,7 +10,7 @@ public interface Sender {
         send(msg.getJSON());
     }
     default void serverSend(String msg, String status) {
-        throw new RuntimeException("serverSend not have realisation");
+        throw new RuntimeException("serverSend don't have realisation");
     }
     default void serverSend(String msg) {
         serverSend(msg, "ok");
