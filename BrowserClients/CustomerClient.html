@@ -27,13 +27,14 @@
 </div>
 <div id="chat">
   <div id="msg-box"></div>
-  <input id="messageField" type="text" onkeyup="if(key(event)==13){document.getElementById('inp').click();}">
+  <input id="messageField" type="text" onkeydown = "if (event.keyCode == 13)
+                        checkAnswer()">
   <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
 
 </div>
 
 <script>
-
+    let TYPE = "CUSTOMER";
     function checkAnswer() {
         var strMessage = msgField.value;
         try {

@@ -9,7 +9,7 @@ var currentUser = null;
       return false;
     }
 
-    currentUser = new User(userName, "CUSTOMER")
+    currentUser = new User(userName, TYPE)
     msg = new Message(currentUser, "", "reg")
     showMessage(new Message(new User("Server", "NONE"), "Hello, " + currentUser.name))
     sendMsg(msg)
@@ -35,6 +35,8 @@ var currentUser = null;
             divMsg.innerHTML += "<div class='msg customer-msg'><span>"+  msg.user.name + "</span>: " + msg.message + "</div>"
             break;
         }
+
+        document.getElementById("msg-box").scrollTop = 9999;
 
     }
 

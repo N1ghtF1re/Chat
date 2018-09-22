@@ -25,19 +25,17 @@
       <button type="button" name="button" class="btn" onclick="autoris()">Принять</button>
     </div>
   </div>
-  
+
 <div id="chat">
   <div id="msg-box"></div>
 
-  <form>
-      <input id="messageField" type="text">
-      <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
-  </form>
+  <input id="messageField" type="text" onkeydown = "if (event.keyCode == 13)
+                        checkAnswer()">
+  <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
+
 </div>
-<script src="Client.js"></script>
-
 <script>
-
+let TYPE = "AGENT";
 function checkAnswer() {
     var strMessage = msgField.value;
     try {
@@ -73,5 +71,6 @@ function checkAnswer() {
 }
 
 </script>
+<script src="Client.js"></script>
 </body>
 </html>
