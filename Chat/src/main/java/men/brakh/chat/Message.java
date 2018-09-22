@@ -6,7 +6,6 @@ public class Message {
     private User user; // Объект пользователя
     private String message; // Сообщение пользователя
     private String status; // Статус отправленного сообщения. Если exit - разрыв соединения
-    private String userType;
 
 
     public Message() {

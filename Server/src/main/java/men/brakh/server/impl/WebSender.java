@@ -10,7 +10,7 @@ import java.io.IOException;
 public class WebSender implements Sender {
     private Session session;
 
-    WebSender(Session session) {
+    public WebSender(Session session) {
         this.session = session;
     }
 

@@ -22,7 +22,9 @@ public class AgentsHandler implements Handler {
     @Override
     public boolean handle(Message userMessage) {
         if (userMessage.getStatus().equals("exit")) { // Агент выходит из ВСЕГО чата
-            sender.serverSend("Вы отключились от сервера", "exit");
+            try {
+                sender.serverSend("Вы отключились от сервера", "exit");
+            } catch (IllegalStateException ignore) {}
             synchronized (server.agentsQueue) {
                 server.removeAgentFromChat(userMessage.getUser());
                 server.removeAgentFromQueue(userMessage.getUser());
@@ -45,7 +47,7 @@ public class AgentsHandler implements Handler {
             User agent = userMessage.getUser();
             agent.setId(newId); // Меняем id с -1 на новый
             userMessage.setUser(agent);
-
+            server.checkFreeAgents();
         }
 
         if ((server.customerChatQueue.searchAgent(userMessage.getUser()) == null)  // Ищем агента в очередях

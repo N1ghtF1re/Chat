@@ -19,7 +19,9 @@ public class CustomersHandler implements Handler {
     @Override
     public boolean handle(Message userMessage) {
         if (userMessage.getStatus().equals("exit")) { // Пользователь захотел отключиться
-            sender.serverSend("Вы отключились от сервера", "exit");
+            try {
+                sender.serverSend("Вы отключились от сервера", "exit");
+            } catch (IllegalStateException ignore) {}
             server.removeCustomerChatElement(userMessage.getUser()); // Освобождаем привязанного агента
             server.checkFreeAgents();
             server.log(userMessage.getUser() + " has disconnected from the server");

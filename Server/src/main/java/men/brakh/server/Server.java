@@ -147,6 +147,7 @@ public class Server {
     synchronized public void log(Exception e) {
         try {
             logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
+            e.printStackTrace();
         } catch (IOException e2) {
             e.printStackTrace();
         }
