@@ -58,6 +58,12 @@
             <artifactId>tyrus-server</artifactId>
             <version>1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-client</artifactId>
+            <version>1.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
@@ -87,7 +93,6 @@
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
-                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
