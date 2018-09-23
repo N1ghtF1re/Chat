@@ -71,6 +71,9 @@ var currentUser = null;
     };
 
     webSocket.onclose = function() {
+        showMessage(new Message(new User("Server", "NONE"), "Сервер недоступен. Попробуйте позже"))
+        document.getElementById("messageField").style.display = 'none';
+        document.getElementById("inp").style.display = 'none';
         console.log("connection closed");
     };
 
