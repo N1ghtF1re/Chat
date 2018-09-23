@@ -16,23 +16,28 @@ public class CustomerSendCommand extends Command {
     public void execute() {
         CustomerChatQueue chat = server.customerChatQueue; // Очередь чатов
         if (chat.searchCustomer(message.getUser()) == null) { // Если в очереди чатов еще нет этого пользователя => создаем чат
+
             chat.add(message.getUser(), sender);
-            server.log("Customer " + message.getUser() +" awaiting response. Message: " + message.getMessage());
+            server.log(String.format("Customer %s awaiting response. Message: %s", message.getUser(), message.getMessage()));
 
             TwoPersonChat userchat = server.customerChatQueue.searchCustomer(message.getUser());
             userchat.addMessage(message);
 
             String msg = "Ваш запрос принят. Ожидайте подключения специалиста";
-            sender.serverSend(msg); // отослать принятое сообщение с
-            server.checkFreeAgents();
+            sender.serverSend(msg);
+            server.checkFreeAgents(); // Пытаемся найти агента
+
         } else { // У пользователя уже есть созданный чат
             TwoPersonChat currChat = chat.searchCustomer(message.getUser()); // Получаем текущий чат
             if (currChat.getAgent() != null) { // Если в чате уже есть агент => отправляем ему
                 currChat.getAgent().getSender().send(message.getJSON());
             }
             currChat.addMessage(message); // Сохраняем историю сообшений
-            server.log("Message from customer " + message.getUser() + " to agent " + currChat.getAgent() + ": " +
-                    message.getMessage() + ". Status: " + message.getStatus());
+
+            server.log(String.format("Message from customer %s to agent %s: %s. Status: %s.", message.getUser(),
+                    currChat.getAgent(), message.getMessage(), message.getStatus())
+            );
+
         }
     }
 }

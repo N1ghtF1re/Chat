@@ -129,6 +129,16 @@ public class Server {
     }
 
     /**
+     * Проверка, находится ли агент в одной из очередей (В чате с пользователем или очереди агентов)
+     * @param agent Объект агента
+     * @return True если агент новый и не находится в очередях
+     */
+    public Boolean isAgentNew(User agent) {
+        return (customerChatQueue.searchAgent(agent) == null)  // Ищем агента в очередях
+                && (agentsQueue.searchAgent(agent) == null);
+    }
+
+    /**
      * Получем ID нового пользователя
      * @return ID
      */
