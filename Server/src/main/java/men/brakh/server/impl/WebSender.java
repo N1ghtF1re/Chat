@@ -7,6 +7,10 @@ import men.brakh.server.Sender;
 import javax.websocket.Session;
 import java.io.IOException;
 
+/**
+ * "Отправитель" сообщений веб-клиенту
+ */
+
 public class WebSender implements Sender {
     private Session session;
 

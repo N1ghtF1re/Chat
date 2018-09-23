@@ -1,12 +1,11 @@
 package men.brakh.server.data;
 
 import men.brakh.server.Sender;
-import men.brakh.server.ServerSomthing;
 import men.brakh.chat.User;
 
 /**
  * Расширенный объект пользователя
- * (User + ServerSomthing)
+ * (User + объект класса Sender(Отправка сообщения пользователю))
  */
 public class ExtendUser {
     private User user;

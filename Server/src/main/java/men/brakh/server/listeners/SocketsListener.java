@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Прослушка сокетов консольного клиента в отдельном потоке
+ */
 public class SocketsListener extends Thread {
     Server server;
     private ExecutorService pool;

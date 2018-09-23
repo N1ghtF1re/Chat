@@ -7,6 +7,9 @@ import men.brakh.server.Server;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.server.queues.CustomerChatQueue;
 
+/**
+ * Обработчик сообщений клиента
+ */
 public class CustomersHandler implements Handler {
     Server server;
     Sender sender;

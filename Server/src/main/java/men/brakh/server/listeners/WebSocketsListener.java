@@ -6,6 +6,10 @@ import men.brakh.server.endpoints.ChatEndpoint;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+
+/**
+ * "Развертывание" сервера и запуск прослушки вебсокетов
+ */
 public class WebSocketsListener extends  Thread{
     Server server;
     String host = "localhost";

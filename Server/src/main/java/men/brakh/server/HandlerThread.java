@@ -8,6 +8,9 @@ import men.brakh.server.impl.WebSender;
 
 import javax.websocket.Session;
 
+/**
+ * Обработка сообщений в отдельном потоке (для вебсоектов)
+ */
 public class HandlerThread extends Thread {
     private Message message;
 

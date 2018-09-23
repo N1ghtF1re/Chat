@@ -7,6 +7,9 @@ import men.brakh.server.Sender;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
+/**
+ * "Отправитель" сообщений консольному клиенту
+ */
 public class ConsoleSender implements Sender {
     private BufferedWriter out; // поток записи в сокет
 

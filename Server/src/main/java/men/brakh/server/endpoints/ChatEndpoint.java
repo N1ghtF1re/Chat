@@ -7,9 +7,13 @@ import men.brakh.server.Server;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.HashMap;
 
+
+/**
+ * Класс "endpoint" вебсокета, занимается
+ * обработкой приходящих запросов
+ */
 @ServerEndpoint("/chat")
 public class ChatEndpoint {
     public static Server server;
@@ -19,11 +23,6 @@ public class ChatEndpoint {
     @OnOpen
     public void onOpen(Session session) {
         server.log("Session opened, id: " + session.getId());
-        try {
-            session.getBasicRemote().sendText(new Message(new User("Server"),  "Hi there, we are successfully connected.").getJSON());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     @OnMessage

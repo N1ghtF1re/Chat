@@ -6,6 +6,9 @@ import men.brakh.chat.User;
 
 import java.util.ArrayList;
 
+/**
+ * Класс "комнаты" на два человека - агента и клиента
+ */
 public class TwoPersonChat {
     private men.brakh.server.data.ExtendUser customer;
     private men.brakh.server.data.ExtendUser agent;

@@ -2,7 +2,9 @@ package men.brakh.server;
 
 import men.brakh.chat.Message;
 
-import java.io.BufferedWriter;
+/**
+ * Интерфейс "отправителя" сообщений клиенту
+ */
 
 public interface Sender {
     void send(String msg);
