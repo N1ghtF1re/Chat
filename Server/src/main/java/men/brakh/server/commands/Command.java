@@ -4,6 +4,10 @@ import men.brakh.chat.Message;
 import men.brakh.server.Sender;
 import men.brakh.server.Server;
 
+/**
+ * Абстрактный класс для
+ * Комманд пользвателей чата
+ */
 public abstract class Command {
     protected Server server;
     protected Sender sender;
