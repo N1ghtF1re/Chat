@@ -30,7 +30,8 @@ public class CustomersHandler implements Handler {
                 new CustomerRegCommand(server, userMessage, sender),
                 new CustomerLeaveCommand(server,userMessage,sender),
                 new CustomerExitCommand(server,userMessage,sender),
-                new CustomerSendCommand(server, userMessage, sender));
+                new CustomerSendCommand(server, userMessage, sender)
+        );
 
         try {
             invoker.executeComand(userMessage.getStatus());
@@ -42,7 +43,6 @@ public class CustomersHandler implements Handler {
         if (userMessage.getStatus().equals("exit")) {
             return false;
         }
-
 
         return true;
     }

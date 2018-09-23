@@ -25,7 +25,8 @@ public class CustomerCommandsInvoker {
                 defaultRegStringCommand,
                 defaultLeaveStringCommand,
                 defaultExitStringCommand,
-                defaultSendStringCommand);
+                defaultSendStringCommand
+        );
     }
 
     public void setCommandsMap(String regStringCommand, String leaveStringCommand, String exitStringCommand, String okStringCommand) {
@@ -40,24 +41,20 @@ public class CustomerCommandsInvoker {
     }
 
     public Object reg() {
-        System.out.println("reg");
         regCommand.execute();
         return null;
     }
 
     public Object leave() {
-        System.out.println("leave");
         leaveCommand.execute();
         return null;
     }
 
     public Object exit() {
-        System.out.println("exit");
         exitCommand.execute();
         return null;
     }
     public Object send() {
-        System.out.println("send");
         sendCommand.execute();
         return null;
     }
