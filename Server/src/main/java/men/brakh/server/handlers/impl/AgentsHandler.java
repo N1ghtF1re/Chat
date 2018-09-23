@@ -1,8 +1,8 @@
-package men.brakh.server.impl;
+package men.brakh.server.handlers.impl;
 
 import men.brakh.chat.Message;
-import men.brakh.server.Sender;
-import men.brakh.server.Handler;
+import men.brakh.server.handlers.Handler;
+import men.brakh.server.senders.Sender;
 import men.brakh.server.Server;
 import men.brakh.server.commands.AgentCommandsInvoker;
 import men.brakh.server.commands.impl.agent.AgentSendCommand;

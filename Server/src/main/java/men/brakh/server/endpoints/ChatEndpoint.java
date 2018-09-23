@@ -2,7 +2,7 @@ package men.brakh.server.endpoints;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
-import men.brakh.server.HandlerThread;
+import men.brakh.server.handlers.HandlerThread;
 import men.brakh.server.Server;
 
 import javax.websocket.*;

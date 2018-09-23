@@ -1,7 +1,7 @@
 package men.brakh.server.commands;
 
 import men.brakh.chat.Message;
-import men.brakh.server.Sender;
+import men.brakh.server.senders.Sender;
 import men.brakh.server.Server;
 
 /**

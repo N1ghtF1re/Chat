@@ -1,8 +1,8 @@
-package men.brakh.server.impl;
+package men.brakh.server.senders.impl;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
-import men.brakh.server.Sender;
+import men.brakh.server.senders.Sender;
 
 import javax.websocket.Session;
 import java.io.IOException;

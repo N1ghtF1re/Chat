@@ -1,10 +1,12 @@
-package men.brakh.server;
+package men.brakh.server.handlers;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.UsersTypes;
-import men.brakh.server.impl.AgentsHandler;
-import men.brakh.server.impl.CustomersHandler;
-import men.brakh.server.impl.WebSender;
+import men.brakh.server.handlers.impl.AgentsHandler;
+import men.brakh.server.handlers.impl.CustomersHandler;
+import men.brakh.server.senders.Sender;
+import men.brakh.server.Server;
+import men.brakh.server.senders.impl.WebSender;
 
 import javax.websocket.Session;
 

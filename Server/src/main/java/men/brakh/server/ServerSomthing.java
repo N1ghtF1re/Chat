@@ -3,9 +3,10 @@ package men.brakh.server;
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
 import men.brakh.chat.UsersTypes;
-import men.brakh.server.impl.AgentsHandler;
-import men.brakh.server.impl.ConsoleSender;
-import men.brakh.server.impl.CustomersHandler;
+import men.brakh.server.handlers.impl.AgentsHandler;
+import men.brakh.server.senders.impl.ConsoleSender;
+import men.brakh.server.handlers.impl.CustomersHandler;
+import men.brakh.server.senders.Sender;
 
 import java.io.*;
 import java.net.Socket;

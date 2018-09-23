@@ -1,4 +1,4 @@
-package men.brakh.server;
+package men.brakh.server.handlers;
 
 import men.brakh.chat.Message;
 

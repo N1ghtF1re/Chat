@@ -9,6 +9,8 @@ import men.brakh.server.listeners.SocketsListener;
 import men.brakh.server.listeners.WebSocketsListener;
 import men.brakh.server.queues.AgentsQueue;
 import men.brakh.server.queues.CustomerChatQueue;
+import men.brakh.server.senders.Sender;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

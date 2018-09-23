@@ -1,7 +1,7 @@
 package men.brakh.server.commands.impl.customer;
 
 import men.brakh.chat.Message;
-import men.brakh.server.Sender;
+import men.brakh.server.senders.Sender;
 import men.brakh.server.Server;
 import men.brakh.server.commands.Command;
 import men.brakh.server.data.TwoPersonChat;

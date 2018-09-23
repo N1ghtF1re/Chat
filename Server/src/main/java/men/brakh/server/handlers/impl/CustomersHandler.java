@@ -1,16 +1,14 @@
-package men.brakh.server.impl;
+package men.brakh.server.handlers.impl;
 
 import men.brakh.chat.Message;
-import men.brakh.server.Handler;
-import men.brakh.server.Sender;
+import men.brakh.server.handlers.Handler;
+import men.brakh.server.senders.Sender;
 import men.brakh.server.Server;
 import men.brakh.server.commands.CustomerCommandsInvoker;
 import men.brakh.server.commands.impl.customer.CustomerExitCommand;
 import men.brakh.server.commands.impl.customer.CustomerLeaveCommand;
 import men.brakh.server.commands.impl.customer.CustomerRegCommand;
 import men.brakh.server.commands.impl.customer.CustomerSendCommand;
-import men.brakh.server.data.TwoPersonChat;
-import men.brakh.server.queues.CustomerChatQueue;
 
 /**
  * Обработчик сообщений клиента

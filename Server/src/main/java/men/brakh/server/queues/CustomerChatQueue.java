@@ -1,6 +1,6 @@
 package men.brakh.server.queues;
 
-import men.brakh.server.Sender;
+import men.brakh.server.senders.Sender;
 import men.brakh.chat.User;
 import men.brakh.server.data.TwoPersonChat;
 
