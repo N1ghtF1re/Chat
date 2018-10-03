@@ -26,13 +26,15 @@ public abstract class Client {
     private ReadMsg readThread;
     private WriteMsg writeThread;
 
+    private int currChat = -1;
+
     private Logger logger;
 
 
     /**
      * Начало работы клиента
      * @param socket Socket
-     * @throws IOException
+     * @throws IOException"ok",
      */
     public void start(Socket socket) throws IOException {
         clientSocket = socket;
@@ -172,6 +174,13 @@ public abstract class Client {
 
     }
 
+    public void sendMessage(Message message){
+        message.setChat_id(currChat);
+        String msg = message.getJSON();
+        sendMessage(msg);
+
+    }
+
     /**
      * Обработка сообщений пользоваетелей
      * @param message сообщение пользователя
@@ -214,6 +223,8 @@ public abstract class Client {
             showMessage(new User("System"), "Connection closed");
         } else if("reg".equals(status)) {
             setUserId(Integer.parseInt(message.getMessage()));
+        } else if("chat".equals(status)) {
+            setCurrChat(Integer.parseInt(message.getMessage()));
         }
     }
 
@@ -238,5 +249,13 @@ public abstract class Client {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCurrChat(int currChat) {
+        this.currChat = currChat;
+    }
+
+    public int getCurrChat() {
+        return currChat;
     }
 }

@@ -31,18 +31,18 @@ public class CustomerClient extends Client {
             String[] words = strMessage.split(" "); // Разделяем команду на слова
             if ((getUser() == null) && (words.length == 2) && (words[0].equals("!register"))) { // Регистрация пользователя
                 registerUser(words[1]);
-                sendMessage(new Message(getUser(), "", "reg").getJSON());
+                sendMessage(new Message(getUser(), "", "reg"));
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) { // Выход из системы
                     quit();
                 } else if(words[0].equals("!leave")) { // Отключение от чата
-                    sendMessage(new Message(getUser(), "", "leave").getJSON());
+                    sendMessage(new Message(getUser(), "", "leave"));
                     log("User Leave");
                 }
             }
         } else if (getUser() != null) {  // Если это команда - просто отправляем сообщение собеседнику
-            sendMessage(message.getJSON());
+            sendMessage(message);
             showMessage(message.getUser(), message.getMessage()); // Отображаем отправленное сообщение
         }
     }

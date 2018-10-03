@@ -11,9 +11,15 @@ import java.util.ArrayDeque;
  */
 public class CustomerChatQueue {
     private ArrayDeque<TwoPersonChat> queue = new ArrayDeque<TwoPersonChat>();
+    private int currId = 0;
+
+    synchronized int getCurrId() {
+        return ++currId;
+    }
+
 
     public void add(User user, Sender sender) {
-        queue.addLast(new TwoPersonChat(user, sender));
+        queue.addLast(new TwoPersonChat(user, sender, getCurrId()));
     }
     public TwoPersonChat getFirst() {
         if(queue.size() == 0) {
@@ -50,6 +56,16 @@ public class CustomerChatQueue {
         }
         return null;
     }
+
+    public TwoPersonChat getById(int id) {
+        for (TwoPersonChat chat : queue) {
+            if(chat.getId() == id) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
     public void remove(TwoPersonChat chat) {
         queue.remove(chat);
     }

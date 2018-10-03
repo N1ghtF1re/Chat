@@ -43,21 +43,22 @@ function checkAnswer() {
           let words = strMessage.split(" ")
           if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
             currentUser = new User(words[1], "AGENT")
-            msg = new Message(currentUser, "", "reg")
-            showMessage(new Message(new User("Server"), "Hello, " + currentUser.name))
+            msg = new Message(currentUser, "", currChat, "reg")
+            console.log(msg)
+            showMessage(new Message(new User("Server"), "Hello, " + currentUser.name, -1))
             sendMsg(msg)
           } else if (currentUser != null) {
             if(words[0] == "!exit") {
-              msg = new Message(currentUser, "", "exit")
+              msg = new Message(currentUser, "", currChat, "exit")
               sendMsg(msg)
             } else if(words[0] == "!skip") {
-              msg = new Message(currentUser, "", "skip")
+              msg = new Message(currentUser, "", currChat, "skip")
               sendMsg(msg)
             }
           }
         } else if (currentUser != null) {
 
-          msg = new Message(currentUser, strMessage)
+          msg = new Message(currentUser, strMessage, currChat)
           console.log(msg)
           sendMsg(msg)
           showMessage(msg)

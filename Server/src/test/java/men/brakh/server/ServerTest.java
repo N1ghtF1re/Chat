@@ -316,18 +316,26 @@ public class ServerTest {
             }
         }, server);
         s2.usersHandler(new Message(cl1, "reg"));
-        s2.usersHandler(new Message(cl1, msg1, "ok"));
+        String messages2[] = out2.toString().split("\n");
+        int chat_id = Integer.parseInt(Message.decodeJSON(messages2[1]).getMessage());
+        s2.usersHandler(new Message(cl1, msg1, chat_id));
 
         String messages1[] = out1.toString().split("\n");
+
+
+
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getStatus(), "ok");
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getMessage(), msg1);
 
-        s1.agentsHandler(new Message(ag1, msg2));
-        String messages2[] = out2.toString().split("\n");
+
+        chat_id = Integer.parseInt(Message.decodeJSON(messages1[1]).getMessage());
+
+        s1.agentsHandler(new Message(ag1, msg2, chat_id));
+        messages2 = out2.toString().split("\n");
         assertEquals(Message.decodeJSON(messages2[messages2.length-1]).getStatus(), "ok");
         assertEquals(Message.decodeJSON(messages2[messages2.length-1]).getMessage(), msg2);
 
-        s1.usersHandler(new Message(cl1, msg3));
+        s1.usersHandler(new Message(cl1, msg3, chat_id));
         messages1 = out1.toString().split("\n");
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getStatus(), "ok");
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getMessage(), msg3);

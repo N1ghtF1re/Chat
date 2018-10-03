@@ -13,10 +13,16 @@ public class TwoPersonChat {
     private men.brakh.server.data.ExtendUser customer;
     private men.brakh.server.data.ExtendUser agent;
     private ArrayList<Message> messages = new ArrayList<Message>();
+    private int id;
 
-    public TwoPersonChat(User customer, Sender sender) {
+    public TwoPersonChat(User customer, Sender sender, int id) {
         this.customer = new men.brakh.server.data.ExtendUser(customer, sender);
         this.agent = null;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public men.brakh.server.data.ExtendUser getCustomer() {

@@ -12,7 +12,11 @@ public class CustomerExitCommand extends Command {
 
     @Override
     public void execute() {
+        try {
+            sender.serverSend("Вы отключились от сервера", "exit");
+        } catch (IllegalStateException ignore) {}
         server.removeCustomerChatElement(message.getUser()); // Освобождаем привязанного агента
+
         server.checkFreeAgents();
         server.log(message.getUser() + " has disconnected from the server");
     }

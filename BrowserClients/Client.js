@@ -2,7 +2,7 @@ var webSocket = new WebSocket("ws://localhost:8081/chat");
 var msgField = document.getElementById("messageField");
 var divMsg = document.getElementById("msg-box");
 var currentUser = null;
-
+var currChat = -1;
   function autoris() {
     let userName = document.getElementById('login').value;
     if(userName.length < 3) {
@@ -10,7 +10,7 @@ var currentUser = null;
     }
 
     currentUser = new User(userName, TYPE)
-    msg = new Message(currentUser, "", "reg")
+    msg = new Message(currentUser, "", -1, "reg")
     showMessage(new Message(new User("Server", "NONE"), "Hello, " + currentUser.name))
     sendMsg(msg)
     document.getElementById('chat').style.display = 'block';
@@ -42,6 +42,7 @@ var currentUser = null;
 
     function sendMsg(msg) {
         webSocket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg))
     }
 
 
@@ -60,6 +61,9 @@ var currentUser = null;
 
           case "reg":
             currentUser.setId(msg.message)
+            break;
+          case "chat":
+            currChat = parseInt(msg.message)
             break;
         }
     }

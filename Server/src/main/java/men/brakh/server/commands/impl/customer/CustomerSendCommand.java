@@ -25,10 +25,17 @@ public class CustomerSendCommand extends Command {
 
             String msg = "Ваш запрос принят. Ожидайте подключения специалиста";
             sender.serverSend(msg);
+            sender.serverSend(String.valueOf(userchat.getId()), "chat");
             server.checkFreeAgents(); // Пытаемся найти агента
 
         } else { // У пользователя уже есть созданный чат
-            TwoPersonChat currChat = chat.searchCustomer(message.getUser()); // Получаем текущий чат
+            int chat_id = message.getChatId();
+
+            if(chat_id == -1) return;
+
+            TwoPersonChat currChat = chat.getById(chat_id);
+
+            // @Deprecated: TwoPersonChat currChat = chat.searchCustomer(message.getUser()); // Получаем текущий чат
             if (currChat.getAgent() != null) { // Если в чате уже есть агент => отправляем ему
                 currChat.getAgent().getSender().send(message.getJSON());
             }

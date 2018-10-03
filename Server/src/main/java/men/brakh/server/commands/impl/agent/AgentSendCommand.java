@@ -26,9 +26,13 @@ public class AgentSendCommand extends Command {
         } else {
             CustomerChatQueue chat = server.customerChatQueue;
 
-            TwoPersonChat currChat = chat.searchAgent(message.getUser()); // Ищем чат с агентом
-            if (currChat == null) return; // Если чата с агентом нет => игнорируем сообщение
-            if (!message.getStatus().equals("ok")) return; // Если статус != "reg" => игнорируем сообщение
+            int chat_id = message.getChatId();
+
+            if(chat_id == -1) return;
+
+            TwoPersonChat currChat = chat.getById(chat_id); // Теперь поиск идет по id чата
+
+            //@Deprecated: TwoPersonChat currChat = chat.searchAgent(message.getUser()); // Ищем чат с агентом
 
             if (currChat.getCustomer() != null) {
                 // Отправляем сообщение собеседнику
@@ -39,6 +43,7 @@ public class AgentSendCommand extends Command {
             server.log(String.format("Message from agent %s to customer %s: %s. Status: %s.", message.getUser(),
                     currChat.getCustomer(), message.getMessage(), message.getStatus())
             );
+
 
         }
     }

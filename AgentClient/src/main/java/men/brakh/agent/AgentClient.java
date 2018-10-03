@@ -32,19 +32,19 @@ public class AgentClient extends Client {
             String[] words = strMessage.split(" ");
             if ((words.length == 2) && (words[0].equals("!register"))) { // Регистрация агента в клиенте
                 registerUser(words[1]);
-                sendMessage(new Message(getUser(), "", "reg").getJSON()); // Отправляем сообщение
+                sendMessage(new Message(getUser(), "", "reg")); // Отправляем сообщение
                 // Что агент открыт для "подключений" на сервер
                 showMessage(new User("System"), "Hello, " + getUser());
             } else if (getUser() != null) {
                 if(words[0].equals("!exit")) { // Выход из приложения
                     quit();
                 } else if(words[0].equals("!skip")) { // Переключение на другого пользователя
-                    sendMessage(new Message(this.getUser(), "", "skip").getJSON());
+                    sendMessage(new Message(this.getUser(), "", "skip"));
                     log("Skip customer");
                 }
             }
         } else if (getUser() != null) { // Если это команда - просто отправляем сообщение собеседнику
-            sendMessage(message.getJSON());
+            sendMessage(message);
             showMessage(message.getUser(), message.getMessage()); // Отображение отправленного сообщения
         }
     }
