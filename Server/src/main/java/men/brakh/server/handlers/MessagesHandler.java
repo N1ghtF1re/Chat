@@ -20,6 +20,8 @@ public class MessagesHandler {
     private CustomersHandler customersHandler;
 
     public MessagesHandler(Message message, Session session, Server server) {
+        agentsHandler = new AgentsHandler(server, new WebSender(session));
+        customersHandler = new CustomersHandler(server, new WebSender(session));
         if (message.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
             customersHandler.handle(message);
         } else if (message.getUser().getUserType() == UsersTypes.AGENT) { // На сервер написал агент
