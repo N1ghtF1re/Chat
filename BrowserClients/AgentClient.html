@@ -27,7 +27,13 @@
   </div>
 
 <div id="chat">
-  <div id="msg-box"></div>
+  <div id="msg-box">
+    <div class="msgs" id=0 chat="-1">
+    </div>
+    <div class="msgs" id=1 chat="-1">
+    </div>
+
+  </div>
 
   <input id="messageField" type="text" onkeydown = "if (event.keyCode == 13)
                         checkAnswer()">
@@ -72,6 +78,121 @@ function checkAnswer() {
 }
 
 </script>
-<script src="Client.js"></script>
+
+<script>
+var webSocket = new WebSocket("ws://localhost:8081/chat");
+var msgField = document.getElementById("messageField");
+var divMsg = document.getElementById("msg-box");
+var currentUser = null;
+var currChat = -1;
+var chat_ids = [-1,-1]
+  function autoris() {
+    let userName = document.getElementById('login').value;
+    if(userName.length < 3) {
+      return false;
+    }
+
+    currentUser = new User(userName, TYPE)
+    msg = new Message(currentUser, "", -1, "reg")
+    showMessage(new Message(new User("Server", "NONE"), "Hello, " + currentUser.name, -1))
+    sendMsg(msg)
+    document.getElementById('chat').style.display = 'block';
+    document.getElementById('autorisation').style.display = 'none';
+
+  }
+
+  function showMessage(msg) {
+
+        console.log(msg.user.userType)
+        var add
+        switch (msg.user.userType) {
+          case "NONE":
+            add = "<div class='msg server-msg'>" + msg.message + "</div>"
+            break;
+
+          case "AGENT":
+            add = "<div class='msg agent-msg'><span>"+ msg.user.name + "</span>: " + msg.message + "</div>"
+            break;
+
+          case "CUSTOMER":
+            add = "<div class='msg customer-msg'><span>"+  msg.user.name + "</span>: " + msg.message + "</div>"
+            break;
+        }
+
+        if(msg.chat_id != -1) { // Если сообщение пришло из определенного чата, отправляем в нужную вкладку
+          msgs = document.getElementsByClassName("msgs");
+          for(var i = 0; i < msgs.length; i++) {
+              if(msgs[i].getAttribute("chat")==msg.chat_id) {
+                msgs[i].innerHTML += add
+                break
+              }
+          }
+
+        } else {// Если чат не определен, показываем сообщение во всех вкладках
+          msgs = document.getElementsByClassName("msgs");
+          for(var i = 0; i < msgs.length; i++) {
+              msgs[i].innerHTML += add
+          }
+        }
+
+        document.getElementById("msg-box").scrollTop = 9999;
+
+    }
+
+    function sendMsg(msg) {
+        webSocket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg))
+    }
+
+
+    webSocket.onmessage = function(message) {
+
+        if (message == null) {
+          return
+        }
+
+        msg = JSON.parse(message.data)
+        console.log(msg.status)
+        switch (msg.status) {
+          case "ok":
+            showMessage(msg)
+            break;
+
+          case "reg":
+            currentUser.setId(msg.message)
+            break;
+          case "chat":
+            currChat = parseInt(msg.message)
+            msgs = document.getElementsByClassName("msgs");
+            for(var i = 0; i < msgs.length; i++) {
+                if(msgs[i].getAttribute("chat")=="-1") { // Ищем свободную вкладку и делаем ее вкладкой чата
+                  chat_ids[i] = currChat;
+                  msgs[i].setAttribute("chat", currChat)
+                  break
+                }
+            }
+
+            break;
+        }
+    }
+
+
+
+    webSocket.onopen = function() {
+        console.log("connection opened");
+    };
+
+    webSocket.onclose = function() {
+        showMessage(new Message(new User("Server", "NONE"), "Сервер недоступен. Попробуйте позже", -1))
+        document.getElementById("messageField").style.display = 'none';
+        document.getElementById("inp").style.display = 'none';
+        console.log("connection closed");
+    };
+
+    webSocket.onerror = function wserror(message) {
+        console.log("error: " + message);
+    }
+
+</script>
 </body>
 </html>
