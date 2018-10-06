@@ -104,7 +104,6 @@ var currId = 0;
       div_msg.setAttribute("chat", -1)
       document.getElementById("msg-box").appendChild(div_msg)
       sendMsg(new Message(currentUser, "", -1, "add-session"))
-      showTab(last_id)
 
       var div_tab = document.createElement('div')
       div_tab.className = "control-button tabs-els"
@@ -125,7 +124,7 @@ var currId = 0;
       }
       div_tab.appendChild(div_trash)
       document.getElementById("control-tabs").appendChild(div_tab)
-
+      showTab(last_id)
 
 
    }
@@ -147,13 +146,17 @@ var currId = 0;
    }
 
    function showTab(index) {
-      console.log("mem" + index)
-      msgs = document.getElementsByClassName("msgs");
+      let msgs = document.getElementsByClassName("msgs");
+      let tabs = document.getElementsByClassName("tabs-els");
+
       for(var i = 0; i < msgs.length; i++) {
           if(msgs[i].getAttribute("id") == index) {
              msgs[i].style.display = 'block';
+
+             tabs[i].className = "control-button tabs-els selected"
           } else {
              msgs[i].style.display = 'none';
+             tabs[i].className = "control-button tabs-els"
           }
       }
       currId = index;

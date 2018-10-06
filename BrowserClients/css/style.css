@@ -118,3 +118,8 @@ body:before {
 .control-trash {
    margin: 0px 0px 0px 10px;
 }
+.selected {
+    background: #00a4f1;
+    background-color: #08a9f4;
+    color: #fff;
+}
