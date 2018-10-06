@@ -13,22 +13,13 @@ import javax.websocket.Session;
 /**
  * Обработка сообщений в отдельном потоке (для вебсоектов)
  */
-public class HandlerThread extends Thread {
+public class MessagesHandler {
     private Message message;
 
     private AgentsHandler agentsHandler;
     private CustomersHandler customersHandler;
 
-    public HandlerThread(Message message, Session session, Server server) {
-        this.message = message;
-        Sender sender = new WebSender(session);
-        agentsHandler = new AgentsHandler(server, sender);
-        customersHandler = new CustomersHandler(server, sender);
-        start();
-    }
-
-    @Override
-    public void run() {
+    public MessagesHandler(Message message, Session session, Server server) {
         if (message.getUser().getUserType() == UsersTypes.CUSTOMER) { // На сервер написал клиент
             customersHandler.handle(message);
         } else if (message.getUser().getUserType() == UsersTypes.AGENT) { // На сервер написал агент

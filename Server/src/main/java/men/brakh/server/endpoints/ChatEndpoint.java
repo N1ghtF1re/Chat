@@ -2,7 +2,7 @@ package men.brakh.server.endpoints;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
-import men.brakh.server.handlers.HandlerThread;
+import men.brakh.server.handlers.MessagesHandler;
 import men.brakh.server.Server;
 
 import javax.websocket.*;
@@ -29,7 +29,7 @@ public class ChatEndpoint {
     public void onMessage(String message, Session session) {
         Message msg = Message.decodeJSON(message);
         users.put(session, msg.getUser());
-        new HandlerThread(msg, session, server);
+        new MessagesHandler(msg, session, server);
     }
 
     @OnError
@@ -44,7 +44,7 @@ public class ChatEndpoint {
             return;
         }
         Message msg = new Message(users.get(session), "", "exit");
-        new HandlerThread(msg, session, server);
+        new MessagesHandler(msg, session, server);
 
     }
 
