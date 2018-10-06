@@ -115,3 +115,6 @@ body:before {
 #control-tabs {
    float: right;
 }
+.control-trash {
+   margin: 0px 0px 0px 10px;
+}

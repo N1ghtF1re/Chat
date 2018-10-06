@@ -8,6 +8,8 @@
   <script src="data/User.js"></script>
   <script src="data/Message.js"></script>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -30,7 +32,7 @@
    <div id="control-panel">
       <div class="control-button btn-add" onclick="addTab()">Новая вкладка</div>
       <div id="control-tabs">
-         <div class="control-button" onclick="showTab(0)">Tab 1</div>
+         <div class="control-button tabs-els" id=0 onclick="showTab(0)">Tab 1</div>
       </div>
    </div>
    <div id="msg-box">
@@ -46,10 +48,13 @@ function checkAnswer() {
    var strMessage = msgField.value;
    try {
       msgs = document.getElementsByClassName("msgs");
-      let currChat = msgs[currId].getAttribute("chat");
-      if(currChat == undefined) {
-         currChat = -1;
+      currChat = -1;
+      for(var i = 0; i < msgs.length; i++) {
+         if(msgs[i].getAttribute("id") == currId) {
+            currChat = msgs[i].getAttribute("chat")
+         }
       }
+
       if (strMessage && (strMessage[0] == "!")) {
          let words = strMessage.split(" ")
          if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
@@ -68,7 +73,6 @@ function checkAnswer() {
            }
         }
      } else if (currentUser != null) {
-
           msg = new Message(currentUser, strMessage, currChat)
           console.log(msg)
           sendMsg(msg)
@@ -103,20 +107,50 @@ var currId = 0;
       showTab(last_id)
 
       var div_tab = document.createElement('div')
-      div_tab.innerHTML = "Tab " + (last_id + 1)
-      div_tab.className = "control-button"
+      div_tab.className = "control-button tabs-els"
       let id = last_id
-      div_tab.onclick=function(){
+      div_tab.setAttribute("id", id)
+      span_text = document.createElement('span')
+      span_text.innerHTML = "Tab " + (last_id + 1)
+      span_text.onclick=function(){
          showTab(id)
       }
+      div_tab.appendChild(span_text)
+      div_trash = document.createElement('span')
+      div_trash.className = "control-trash"
+      div_trash.innerHTML = '<i class="fas fa-trash"></i>'
+      div_trash.onclick=function() {
+         removeTab(id)
+         showTab(0)
+      }
+      div_tab.appendChild(div_trash)
       document.getElementById("control-tabs").appendChild(div_tab)
+
+
 
    }
 
+   function removeTab(index) {
+      msgs = document.getElementsByClassName("msgs");
+      tabs = document.getElementsByClassName("tabs-els");
+      let chat_id;
+      for(var i = 0; i < msgs.length; i++) {
+          if(msgs[i].getAttribute("id") == index) {
+             chat_id = msgs[i].getAttribute("chat")
+             document.getElementById("msg-box").removeChild(msgs[i])
+          }
+          if(tabs[i].getAttribute("id") == index) {
+             document.getElementById("control-tabs").removeChild(tabs[i])
+          }
+      }
+      sendMsg(new Message(currentUser, "", chat_id, "rm-session"))
+   }
+
    function showTab(index) {
+      console.log("mem" + index)
       msgs = document.getElementsByClassName("msgs");
       for(var i = 0; i < msgs.length; i++) {
-          if(i == index) {
+          if(msgs[i].getAttribute("id") == index) {
              msgs[i].style.display = 'block';
           } else {
              msgs[i].style.display = 'none';
