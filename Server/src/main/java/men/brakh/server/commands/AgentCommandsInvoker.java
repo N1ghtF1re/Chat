@@ -12,6 +12,8 @@ public class AgentCommandsInvoker {
     private Command skipCommand;
     private Command exitCommand;
     private Command sendCommand;
+    private Command addSessionCommand;
+    private Command rmSessionCommand;
 
     // Текстовые комманды (статус сообщения) по умолчанию
     // для вызова той или инной функции команды
@@ -19,6 +21,8 @@ public class AgentCommandsInvoker {
     private final String defaultSkipStringCommand = "skip";
     private final String defaultExitStringCommand = "exit";
     private final String defaultSendStringCommand = "ok";
+    private final String defaultAddSessionStringCommand = "add-session";
+    private final String defaultRmSessionStringCommand = "rm-session";
 
     // HASHMAP сопоставления текстовой команды и функции, которую необходимо вызывать
     HashMap<String, Callable> stringCommands = new HashMap<>();
@@ -29,17 +33,24 @@ public class AgentCommandsInvoker {
      * @param skipCommand Объект комманды "пропуска" клиента (status "skip")
      * @param exitCommand Объект команды выхода из чата (status "exit")
      * @param sendCommand Объект команды отправки сообщения (status "ok")
+     * @param addSessionCommand Объект команды создания новой "сессии", для общения с несколькими клиентами
+     *                          (status: "add-session")
      */
-    public AgentCommandsInvoker(Command regCommand, Command skipCommand, Command exitCommand, Command sendCommand) {
+    public AgentCommandsInvoker(Command regCommand, Command skipCommand, Command exitCommand,
+                                Command sendCommand, Command addSessionCommand, Command rmSessionCommand) {
         this.regCommand = regCommand;
         this.skipCommand = skipCommand;
         this.exitCommand = exitCommand;
         this.sendCommand = sendCommand;
+        this.addSessionCommand = addSessionCommand;
+        this.rmSessionCommand = rmSessionCommand;
         setCommandsMap(
                 defaultRegStringCommand,
                 defaultSkipStringCommand,
                 defaultExitStringCommand,
-                defaultSendStringCommand
+                defaultSendStringCommand,
+                defaultAddSessionStringCommand,
+                defaultRmSessionStringCommand
         );
     }
 
@@ -49,12 +60,17 @@ public class AgentCommandsInvoker {
      * @param skipStringCommand Текстовая команда "пропуска" клиента
      * @param exitStringCommand Текстовая команда выхода из чата
      * @param okStringCommand Текстовая команда отправки сообщения
+     * @param addSessionStringCommand Текстовая команда создания новой "сессии" (для общения с несколькими клиентами)
      */
-    public void setCommandsMap(String regStringCommand, String skipStringCommand, String exitStringCommand, String okStringCommand) {
+    public void setCommandsMap(String regStringCommand, String skipStringCommand,
+                               String exitStringCommand, String okStringCommand,
+                               String addSessionStringCommand, String rmSessionStringCommand) {
         stringCommands.put(regStringCommand, () -> reg());
         stringCommands.put(skipStringCommand, () -> skip());
         stringCommands.put(exitStringCommand, () -> exit());
         stringCommands.put(okStringCommand, () -> send());
+        stringCommands.put(addSessionStringCommand, () -> addSession());
+        stringCommands.put(rmSessionStringCommand, () -> removeSession());
     }
 
     /**
@@ -100,6 +116,24 @@ public class AgentCommandsInvoker {
      */
     public Object send() {
         sendCommand.execute();
+        return null;
+    }
+
+    /**
+     * Создания новой "сессии" агента (для общения с несколькими пользователями)
+     * @return null
+     */
+    public Object addSession() {
+        addSessionCommand.execute();
+        return null;
+    }
+
+    /**
+     * Удаление "сессии" агента
+     * @return
+     */
+    public Object removeSession() {
+        rmSessionCommand.execute();
         return null;
     }
 }

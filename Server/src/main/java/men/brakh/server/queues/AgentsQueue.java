@@ -63,6 +63,15 @@ public class AgentsQueue {
         }
     }
 
+    public void removeOneAgent(User agent) {
+        for (ExtendUser currAgent : queue) {
+            if (currAgent.getUser().equal(agent)) {
+                queue.remove(currAgent);
+                return;
+            }
+        }
+    }
+
     /**
      * Получечение первого агета в очереди (с удалением из очереди)
      * @return объкт агента
