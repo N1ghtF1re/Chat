@@ -277,6 +277,17 @@ public class ServerTest {
     OutputStream out1;
     OutputStream out2;
 
+
+    private int getChatId(String[] messages) {
+        for(int i = 0; i < messages.length; i++) {
+            Message msg = Message.decodeJSON(messages[i]);
+            if(msg.getStatus().equals("chat")) {
+                return Integer.parseInt(msg.getMessage());
+            }
+        }
+        return -1;
+    }
+
     @Test
     public void messageSendTest() throws IOException {
         final User ag1 = new User("Agent1", 1);
@@ -317,7 +328,7 @@ public class ServerTest {
         }, server);
         s2.usersHandler(new Message(cl1, "reg"));
         String messages2[] = out2.toString().split("\n");
-        int chat_id = Integer.parseInt(Message.decodeJSON(messages2[1]).getMessage());
+        int chat_id = getChatId(messages2);
         s2.usersHandler(new Message(cl1, msg1, chat_id));
 
         String messages1[] = out1.toString().split("\n");
@@ -328,7 +339,7 @@ public class ServerTest {
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getMessage(), msg1);
 
 
-        chat_id = Integer.parseInt(Message.decodeJSON(messages1[1]).getMessage());
+        chat_id = getChatId(messages1);
 
         s1.agentsHandler(new Message(ag1, msg2, chat_id));
         messages2 = out2.toString().split("\n");
@@ -340,5 +351,37 @@ public class ServerTest {
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getStatus(), "ok");
         assertEquals(Message.decodeJSON(messages1[messages1.length-1]).getMessage(), msg3);
     }
+
+    @Test
+    // Агент подключается одновременно к двум клиентам
+    public void agentWithTwoSessionsTest() throws IOException {
+
+        final User ag1 = new User("Agent1", 1);
+        final User cl1 = new User("Client1",2);
+        final User cl2 = new User("Client1",3);
+
+        ServerSomthing s1 = new ServerSomthing(createSocket(), server);
+        s1.agentsHandler(new Message(ag1, "reg"));
+        s1.agentsHandler(new Message(ag1, "","add-session"));
+
+        ServerSomthing s2 = new ServerSomthing(createSocket(), server);
+        s2.usersHandler(new Message(cl1, "reg"));
+        s2.usersHandler(new Message(cl1, "Help", "ok"));
+
+        ServerSomthing s3 = new ServerSomthing(createSocket(), server);
+        s3.usersHandler(new Message(cl2, "reg"));
+        s3.usersHandler(new Message(cl2, "Help", "ok"));
+
+        TwoPersonChat chat1 = server.customerChatQueue.searchCustomer(cl1);
+        TwoPersonChat chat2 = server.customerChatQueue.searchCustomer(cl2);
+        assert(chat1.getAgent().getUser().equal(ag1));
+        assert(chat2.getAgent().getUser().equal(ag1));
+
+        s1.agentsHandler(new Message(ag1, "","rm-session", chat2.getId()));
+        assert(chat2.getAgent() == null);
+        assert(server.agentsQueue.getFirst() == null);
+    }
+
+
 
 }
