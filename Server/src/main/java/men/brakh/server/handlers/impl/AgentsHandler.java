@@ -1,14 +1,11 @@
 package men.brakh.server.handlers.impl;
 
 import men.brakh.chat.Message;
+import men.brakh.server.commands.impl.agent.*;
 import men.brakh.server.handlers.Handler;
 import men.brakh.server.senders.Sender;
 import men.brakh.server.Server;
 import men.brakh.server.commands.AgentCommandsInvoker;
-import men.brakh.server.commands.impl.agent.AgentSendCommand;
-import men.brakh.server.commands.impl.agent.AgentExitCommand;
-import men.brakh.server.commands.impl.agent.AgentRegCommand;
-import men.brakh.server.commands.impl.agent.AgentSkipCommand;
 
 /**
  * Обработчик сообщений агента
@@ -30,7 +27,8 @@ public class AgentsHandler implements Handler {
                 new AgentRegCommand(server, userMessage, sender),
                 new AgentSkipCommand(server,userMessage,sender),
                 new AgentExitCommand(server,userMessage,sender),
-                new AgentSendCommand(server, userMessage, sender)
+                new AgentSendCommand(server, userMessage, sender),
+                new AgentAddSessionCommand(server, userMessage, sender)
         );
 
         try {
