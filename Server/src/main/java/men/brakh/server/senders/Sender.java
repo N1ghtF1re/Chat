@@ -16,6 +16,10 @@ public interface Sender {
         Message message = new Message(new User("Server"),msg, status);
         send(message.getJSON());
     }
+    default void serverSend(String msg, String status, int chat_id) {
+        Message message = new Message(new User("Server"), msg, status, chat_id);
+        send(message.getJSON());
+    }
     default void serverSend(String msg, int chat_id) {
         Message message = new Message(new User("Server"),msg, chat_id);
         send(message.getJSON());

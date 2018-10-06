@@ -171,8 +171,16 @@ var chat_ids = [-1,-1]
                   break
                 }
             }
-
             break;
+
+          case "user-leave":
+            msgs = document.getElementsByClassName("msgs");
+            for(var i = 0; i < msgs.length; i++) {
+                if(msgs[i].getAttribute("chat")==msg.chat_id) {
+                  msgs[i].setAttribute("chat", "-1")
+                }
+            }
+            break
         }
     }
 

@@ -96,12 +96,16 @@ public class Server {
         ExtendUser agent = chat.getAgent();
         chat.setAgent(null);
 
+        int chat_id = chat.getId();
+
         customerChatQueue.remove(chat); // Удаляем объект чата из очереди
         if (agent != null) {
-            agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
             log("Agent " + agent.getUser() + " added to the end of the queue");
 
-            agent.getSender().serverSend(user.getName() + " отключился от Вас :C"); // Сообщаем агенту что его пользователь отключился
+            agent.getSender().serverSend(user.getName() + " отключился от Вас :C", chat_id); // Сообщаем агенту что его пользователь отключился
+            agent.getSender().serverSend("", "user-leave", chat_id);
+            agentsQueue.add(agent); // Освобождаем агента (добавляем в конец очереди агентов)
+
             log(user.getName() + " the user has disconnected from agent " + agent.getUser());
         }
 

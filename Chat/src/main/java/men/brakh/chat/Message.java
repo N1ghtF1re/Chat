@@ -23,6 +23,11 @@ public class Message {
         this(user, message);
         this.status = status;
     }
+    public Message(User user, String message, String status, int chat_id) {
+        this(user, message);
+        this.status = status;
+        this.chat_id = chat_id;
+    }
     public Message(User user, String message, int chat_id) {
         this(user, message);
         this.chat_id = chat_id;
