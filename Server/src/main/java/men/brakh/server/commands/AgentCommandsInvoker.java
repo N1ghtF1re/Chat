@@ -13,6 +13,7 @@ public class AgentCommandsInvoker {
     private Command exitCommand;
     private Command sendCommand;
     private Command addSessionCommand;
+    private Command rmSessionCommand;
 
     // Текстовые комманды (статус сообщения) по умолчанию
     // для вызова той или инной функции команды
@@ -21,6 +22,7 @@ public class AgentCommandsInvoker {
     private final String defaultExitStringCommand = "exit";
     private final String defaultSendStringCommand = "ok";
     private final String defaultAddSessionStringCommand = "add-session";
+    private final String defaultRmSessionStringCommand = "rm-session";
 
     // HASHMAP сопоставления текстовой команды и функции, которую необходимо вызывать
     HashMap<String, Callable> stringCommands = new HashMap<>();
@@ -35,18 +37,20 @@ public class AgentCommandsInvoker {
      *                          (status: "add-session")
      */
     public AgentCommandsInvoker(Command regCommand, Command skipCommand, Command exitCommand,
-                                Command sendCommand, Command addSessionCommand) {
+                                Command sendCommand, Command addSessionCommand, Command rmSessionCommand) {
         this.regCommand = regCommand;
         this.skipCommand = skipCommand;
         this.exitCommand = exitCommand;
         this.sendCommand = sendCommand;
         this.addSessionCommand = addSessionCommand;
+        this.rmSessionCommand = rmSessionCommand;
         setCommandsMap(
                 defaultRegStringCommand,
                 defaultSkipStringCommand,
                 defaultExitStringCommand,
                 defaultSendStringCommand,
-                defaultAddSessionStringCommand
+                defaultAddSessionStringCommand,
+                defaultRmSessionStringCommand
         );
     }
 
@@ -60,12 +64,13 @@ public class AgentCommandsInvoker {
      */
     public void setCommandsMap(String regStringCommand, String skipStringCommand,
                                String exitStringCommand, String okStringCommand,
-                               String addSessionStringCommand) {
+                               String addSessionStringCommand, String rmSessionStringCommand) {
         stringCommands.put(regStringCommand, () -> reg());
         stringCommands.put(skipStringCommand, () -> skip());
         stringCommands.put(exitStringCommand, () -> exit());
         stringCommands.put(okStringCommand, () -> send());
         stringCommands.put(addSessionStringCommand, () -> addSession());
+        stringCommands.put(rmSessionStringCommand, () -> removeSession());
     }
 
     /**
@@ -120,6 +125,15 @@ public class AgentCommandsInvoker {
      */
     public Object addSession() {
         addSessionCommand.execute();
+        return null;
+    }
+
+    /**
+     * Удаление "сессии" агента
+     * @return
+     */
+    public Object removeSession() {
+        rmSessionCommand.execute();
         return null;
     }
 }

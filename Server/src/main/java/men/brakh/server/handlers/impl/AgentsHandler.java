@@ -28,7 +28,8 @@ public class AgentsHandler implements Handler {
                 new AgentSkipCommand(server,userMessage,sender),
                 new AgentExitCommand(server,userMessage,sender),
                 new AgentSendCommand(server, userMessage, sender),
-                new AgentAddSessionCommand(server, userMessage, sender)
+                new AgentAddSessionCommand(server, userMessage, sender),
+                new AgentRemoveSessionCommand(server, userMessage, sender)
         );
 
         try {
