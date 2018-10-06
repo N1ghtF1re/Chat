@@ -27,9 +27,4 @@ public class WebSender implements Sender {
         }
     }
 
-    @Override
-    public void serverSend(String msg, String status) {
-        Message message = new Message(new User("Server"),msg, status);
-        send(message.getJSON());
-    }
 }

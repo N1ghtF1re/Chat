@@ -70,8 +70,9 @@ public class Server {
                         agent.getUser() + ". Пожалуйста, не обижайте его.");
 
                 // Сообщаем агенту что нашли ему пользователя
-                agent.getSender().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser());
                 agent.getSender().serverSend(String.valueOf(twoPersonChat.getId()), "chat");
+                agent.getSender().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser(), twoPersonChat.getId());
+
                 // Отправляем агенту все предыдущие сообщения чата
                 ArrayList<Message> messages = twoPersonChat.getMessages();
                 for (Message msg : messages) {

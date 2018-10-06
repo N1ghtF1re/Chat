@@ -35,6 +35,7 @@ public class TwoPersonChat {
     }
 
     public void addMessage(Message message) {
+        message.setChat_id(id);
         messages.add(message);
     }
     public ArrayList<Message> getMessages() {

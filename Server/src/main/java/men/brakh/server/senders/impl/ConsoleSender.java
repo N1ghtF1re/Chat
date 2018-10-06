@@ -25,9 +25,4 @@ public class ConsoleSender implements Sender {
         } catch (IOException ignored) {}
     }
 
-    @Override
-    public void serverSend(String msg, String status) {
-        Message message = new Message(new User("Server"),msg, status);
-        send(message.getJSON());
-    }
 }
