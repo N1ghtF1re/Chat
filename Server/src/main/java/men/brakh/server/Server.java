@@ -13,6 +13,8 @@ import men.brakh.server.queues.CustomerChatQueue;
 import men.brakh.server.senders.Sender;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 public class Server {
@@ -172,8 +174,10 @@ public class Server {
 
     synchronized public void log(Exception e) {
         try {
-            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + sw.toString());
+
         } catch (IOException e2) {
             e.printStackTrace();
         }
