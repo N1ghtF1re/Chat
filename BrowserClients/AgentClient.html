@@ -27,27 +27,32 @@
   </div>
 
 <div id="chat">
-  <div id="msg-box">
-    <div class="msgs" id=0 chat="-1">
-    </div>
-    <div class="msgs" id=1 chat="-1">
-    </div>
-
-  </div>
-
-  <input id="messageField" type="text" onkeydown = "if (event.keyCode == 13)
+   <div id="control-panel">
+      <div class="control-button btn-add" onclick="addTab()">Новая вкладка</div>
+      <div id="control-tabs">
+         <div class="control-button" onclick="showTab(0)">Tab 1</div>
+      </div>
+   </div>
+   <div id="msg-box">
+      <div class="msgs" id=0 chat="-1"></div>
+   </div>
+   <input id="messageField" type="text" onkeydown = "if (event.keyCode == 13)
                         checkAnswer()">
-  <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
-
+   <input onclick="checkAnswer();" value="Отправить" type="button" class="btn send-message" id="inp">
 </div>
 <script>
 let TYPE = "AGENT";
 function checkAnswer() {
-    var strMessage = msgField.value;
-    try {
-        if (strMessage && (strMessage[0] == "!")) {
-          let words = strMessage.split(" ")
-          if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
+   var strMessage = msgField.value;
+   try {
+      msgs = document.getElementsByClassName("msgs");
+      let currChat = msgs[currId].getAttribute("chat");
+      if(currChat == undefined) {
+         currChat = -1;
+      }
+      if (strMessage && (strMessage[0] == "!")) {
+         let words = strMessage.split(" ")
+         if((currentUser == null) && (words.length = 2) && (words[0] == '!register')) {
             currentUser = new User(words[1], "AGENT")
             msg = new Message(currentUser, "", currChat, "reg")
             console.log(msg)
@@ -57,20 +62,20 @@ function checkAnswer() {
             if(words[0] == "!exit") {
               msg = new Message(currentUser, "", currChat, "exit")
               sendMsg(msg)
-            } else if(words[0] == "!skip") {
+           } else if(words[0] == "!skip") {
               msg = new Message(currentUser, "", currChat, "skip")
               sendMsg(msg)
-            }
-          }
-        } else if (currentUser != null) {
+           }
+        }
+     } else if (currentUser != null) {
 
           msg = new Message(currentUser, strMessage, currChat)
           console.log(msg)
           sendMsg(msg)
           showMessage(msg)
-        }
+       }
 
-    } catch(err) {
+   } catch(err) {
       console.log(err)
     }
     msgField.value = "";
@@ -84,8 +89,42 @@ var webSocket = new WebSocket("ws://localhost:8081/chat");
 var msgField = document.getElementById("messageField");
 var divMsg = document.getElementById("msg-box");
 var currentUser = null;
-var currChat = -1;
-var chat_ids = [-1,-1]
+var last_id = 0;
+var currId = 0;
+
+
+   function addTab() {
+      var div_msg = document.createElement('div')
+      div_msg.className = "msgs";
+      div_msg.setAttribute("id", ++last_id)
+      div_msg.setAttribute("chat", -1)
+      document.getElementById("msg-box").appendChild(div_msg)
+      sendMsg(new Message(currentUser, "", -1, "add-session"))
+      showTab(last_id)
+
+      var div_tab = document.createElement('div')
+      div_tab.innerHTML = "Tab " + (last_id + 1)
+      div_tab.className = "control-button"
+      let id = last_id
+      div_tab.onclick=function(){
+         showTab(id)
+      }
+      document.getElementById("control-tabs").appendChild(div_tab)
+
+   }
+
+   function showTab(index) {
+      msgs = document.getElementsByClassName("msgs");
+      for(var i = 0; i < msgs.length; i++) {
+          if(i == index) {
+             msgs[i].style.display = 'block';
+          } else {
+             msgs[i].style.display = 'none';
+          }
+      }
+      currId = index;
+   }
+
   function autoris() {
     let userName = document.getElementById('login').value;
     if(userName.length < 3) {
@@ -166,7 +205,6 @@ var chat_ids = [-1,-1]
             msgs = document.getElementsByClassName("msgs");
             for(var i = 0; i < msgs.length; i++) {
                 if(msgs[i].getAttribute("chat")=="-1") { // Ищем свободную вкладку и делаем ее вкладкой чата
-                  chat_ids[i] = currChat;
                   msgs[i].setAttribute("chat", currChat)
                   break
                 }
