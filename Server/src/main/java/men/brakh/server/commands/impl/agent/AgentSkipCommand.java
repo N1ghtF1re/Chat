@@ -14,7 +14,7 @@ public class AgentSkipCommand extends Command {
     public void execute() {
         sender.serverSend("Вы отключились от пользователя.");
         synchronized (server.agentsQueue) {
-            server.removeAgentFromChat(message.getUser());
+            server.removeAgentFromChat(message.getChatId());
         }
         server.log("Agent " + message.getUser() + " skip customer");
         server.checkFreeAgents();

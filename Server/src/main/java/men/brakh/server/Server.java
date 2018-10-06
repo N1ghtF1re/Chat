@@ -2,6 +2,7 @@ package men.brakh.server;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
+import men.brakh.server.commands.CustomerCommandsInvoker;
 import men.brakh.server.data.ExtendUser;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;
@@ -108,19 +109,27 @@ public class Server {
 
     /**
      * Удаление агента из чата с пользователем и добавление его в общую очередь агентов
-     * @param agent Объект агента
+     * @param id ID чата
      */
-    public void removeAgentFromChat(User agent) {
-        TwoPersonChat chat = customerChatQueue.searchAgent(agent);
+    public void removeAgentFromChat(int id) {
+        TwoPersonChat chat = customerChatQueue.getById(id);
         if (chat == null) {
             return;
         }
+        User agent = chat.getAgent().getUser();
         Sender sender = chat.getAgent().getSender();
         chat.setAgent(null);
         chat.getCustomer().getSender().serverSend("Агент " + agent + " отключился от Вас. Ждите, пока подключится следующий агент");
         log("Agent " + agent + " has disconnected from " + chat.getCustomer());
         agentsQueue.add(agent, sender);
         log("Agent " + agent + " added to the end of the queue");
+    }
+
+    public void removeAgentsFromAllChats(User user) {
+        TwoPersonChat chat;
+        while ((chat = customerChatQueue.searchAgent(user)) != null) {
+            removeAgentFromChat(chat.getId());
+        }
     }
 
     /**

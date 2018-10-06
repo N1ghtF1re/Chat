@@ -16,7 +16,7 @@ public class AgentExitCommand extends Command {
             sender.serverSend("Вы отключились от сервера", "exit");
         } catch (IllegalStateException ignore) {}
         synchronized (server.agentsQueue) {
-            server.removeAgentFromChat(message.getUser()); // Удаляем агента из чата с пользователем
+            server.removeAgentsFromAllChats(message.getUser()); // Удаляем агента из чата с пользователем
             server.removeAgentFromQueue(message.getUser()); // Удаляем агента из очереди
         }
         server.log("Agent " + message.getUser() + " has disconnected from the server");
