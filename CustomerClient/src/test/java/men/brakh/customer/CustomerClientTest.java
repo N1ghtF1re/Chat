@@ -19,9 +19,22 @@ public class CustomerClientTest {
 
     @Before
     public void init() {
+        out = new ByteArrayOutputStream();
         client = new CustomerClient() {
             @Override
             public void showMessage(User user, String message) {
+            }
+            @Override
+            public void start() {
+            }
+            @Override
+            public void sendMessage(String message) {
+                try {
+                    out.write(message.getBytes());
+                    out.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
             public void log(Exception e) {
@@ -30,23 +43,8 @@ public class CustomerClientTest {
             public void log(String str) {
             }
         };
-        try {
-            client.start(new Socket(){
-                @Override
-                public InputStream getInputStream() {
-                    in = new ByteArrayInputStream(input);
-                    return in;
-                }
 
-                @Override
-                public OutputStream getOutputStream() {
-                    out = new ByteArrayOutputStream();
-                    return out;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
