@@ -6,10 +6,16 @@
 package men.brakh.chat;
 
 import men.brakh.logger.Logger;
+import org.glassfish.tyrus.client.ClientManager;
 
+import javax.websocket.DeploymentException;
+import javax.websocket.Session;
 import java.io.*;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -19,111 +25,68 @@ public abstract class Client {
 
     private User user;
 
-    private Socket clientSocket; // Сокет для общения
-    private BufferedReader in; // Поток чтения из соекта
-    private BufferedWriter out; // Поток записи в сокет
+    private Session session;
 
-    private ReadMsg readThread;
     private WriteMsg writeThread;
 
     private int currChat = -1;
 
     private Logger logger;
 
-
-    /**
-     * Начало работы клиента
-     * @param socket Socket
-     * @throws IOException"ok",
-     */
-    public void start(Socket socket) throws IOException {
-        clientSocket = socket;
-
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-        readThread = new ReadMsg();
-        writeThread = new WriteMsg();
-
-        logger = new Logger();
-        log("Client is open");
-    }
+    private String host = "localhost";
+    private int port = 8081;
 
 
     /**
-     * Создание объекта клиента
-     * @param ip IP сервера
-     * @param port Порт сервера
-     * @throws IOException
-     */
-    public Client(String ip, int port) throws IOException {
-        Socket socket = new Socket(ip, port);
-        start(socket);
-    }
-
-    /**
-     * Пустой конструктор (Для юнит тестов)
+     * Пустой конструктор, хост и порт - по-умолчанию
      */
     public Client() {
-
-    }
-
-    /**
-     * аписываем в лог сообщение
-     * @param message сообщение
-     */
-    public void log(String message) {
         try {
-            logger.write(message);
+            start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public Client(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
     /**
-     * Записываем в лог ошибку
-     * @param e Объект исключения
+     * Начало работы клиента
+     * @throws IOException
      */
-    public void log(Exception e) {
+    public void start() throws IOException {
+        writeThread = new WriteMsg();
+
+        logger = new Logger();
+        log("Client is open");
+
+        ChatClientEndpoint.client = this;
+        ChatClientEndpoint.setLatch(new CountDownLatch(1));
+
+        ClientManager client = ClientManager.createClient();
         try {
-            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
-        } catch (IOException e2) {
-            e.printStackTrace();
-        }
-    }
+            client.connectToServer(ChatClientEndpoint.class, new URI("ws://"+host+":"+port+"/chat"));
+            ChatClientEndpoint.getLatch().await();
 
+        } catch (DeploymentException | URISyntaxException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
     /**
-     * Чтение сообщений с сервера в отдельном потоке
+     * Установка сессии вебсокета
+     * @param session
      */
-    private class ReadMsg extends Thread {
-        private Boolean isKilled;
-        public ReadMsg() {
-            isKilled = false;
-            this.start();
-        }
-        public void kill() {
-            isKilled = true;
-            this.interrupt();
-        }
-        @Override
-        public void run() {
-
-            String str;
-            try {
-                while (!isKilled) {
-                    str = in.readLine(); // ждем сообщения с сервера
-                    try {
-                        checkServerResponse(str);
-                    } catch (Exception e) {
-                        log(e);
-                    }
-                }
-            } catch (IOException e) {
-                log(e);
-            }
-        }
+    public void setSession(Session session) {
+        this.session = session;
     }
+
+
 
     /**
      * Ожидание ввода пользоваетлем в отдельном потоке
@@ -138,6 +101,7 @@ public abstract class Client {
         public void kill() {
             isKilled = true;
             this.interrupt();
+
         }
 
         @Override
@@ -148,12 +112,6 @@ public abstract class Client {
                 answer = scan.nextLine();
 
                 checkAnswer(new Message(getUser(), answer));
-                try {
-                    out.flush();
-                } catch (IOException e) {
-                    log(e);
-                }
-
 
             }
         }
@@ -166,8 +124,7 @@ public abstract class Client {
      */
     public void sendMessage(String message){
         try {
-            out.write(message + "\n");
-            out.flush();
+            session.getBasicRemote().sendText(message);
         } catch (IOException e) {
             log(e);
         }
@@ -202,7 +159,6 @@ public abstract class Client {
      * Убиваем потоки
      */
     public void killThreads() {
-        readThread.kill();
         writeThread.kill();
     }
 
@@ -236,14 +192,20 @@ public abstract class Client {
         this.user = new User(username);
     }
 
-    // GETTERS AND SETTERS
-    public void setUserId(int id) {
-        user.setId(id);
-    }
+    /**
+     * Отключение пользователя
+     */
     public void quit() {
         log("Client is closed");
         sendMessage(new Message(this.getUser(), "", "exit").getJSON());
     }
+
+    // GETTERS AND SETTERS
+    public void setUserId(int id) {
+        user.setId(id);
+    }
+
+
     public User getUser() {
         return user;
     }
@@ -258,4 +220,28 @@ public abstract class Client {
     public int getCurrChat() {
         return currChat;
     }
+
+    /**
+     * Записываем в лог сообщение
+     * @param message сообщение
+     */
+    public void log(String message) {
+        try {
+            logger.write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Записываем в лог ошибку
+     * @param e Объект исключения
+     */
+    public void log(Exception e) {
+        try {
+            logger.write("[ERROR] RECEIVED EXCEPTION: " + e.toString() + "\nStackTrace: " + e.getStackTrace());
+        } catch (IOException e2) {
+            e.printStackTrace();
+        }
+    }
+
 }
