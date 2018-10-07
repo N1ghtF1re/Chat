@@ -11,7 +11,10 @@ import java.util.concurrent.Executors;
 
 /**
  * Прослушка сокетов консольного клиента в отдельном потоке
+ * На данный момент класс считается устаревшим всвязи с отказом от
+ * использования сокетов и будет удален в ближайшее время.
  */
+@Deprecated
 public class SocketsListener extends Thread {
     Server server;
     private ExecutorService pool;

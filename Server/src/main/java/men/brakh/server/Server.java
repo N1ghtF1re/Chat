@@ -2,7 +2,6 @@ package men.brakh.server;
 
 import men.brakh.chat.Message;
 import men.brakh.chat.User;
-import men.brakh.server.commands.CustomerCommandsInvoker;
 import men.brakh.server.data.ExtendUser;
 import men.brakh.server.data.TwoPersonChat;
 import men.brakh.logger.Logger;

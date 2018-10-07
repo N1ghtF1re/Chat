@@ -9,7 +9,10 @@ import java.io.IOException;
 
 /**
  * "Отправитель" сообщений консольному клиенту
+ * На данный момент класс считается устаревшим всвязи с отказом от
+ * использования сокетов и будет удален в ближайшее время.
  */
+@Deprecated
 public class ConsoleSender implements Sender {
     private BufferedWriter out; // поток записи в сокет
 
