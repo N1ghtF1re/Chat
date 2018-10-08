@@ -70,6 +70,8 @@ public abstract class Client {
         try {
             client.connectToServer(ChatClientEndpoint.class, new URI("ws://"+host+":"+port+"/chat"));
             ChatClientEndpoint.getLatch().await();
+            quit();
+
 
         } catch (DeploymentException | URISyntaxException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -106,14 +108,17 @@ public abstract class Client {
 
         @Override
         public void run() {
+            Scanner scan = null;
             while (!isKilled) {
                 String answer;
-                Scanner scan = new Scanner(System.in);
+                scan = new Scanner(System.in);
                 answer = scan.nextLine();
 
                 checkAnswer(new Message(getUser(), answer));
 
             }
+            scan.close();
+
         }
     }
 
