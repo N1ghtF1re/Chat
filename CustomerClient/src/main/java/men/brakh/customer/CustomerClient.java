@@ -17,9 +17,6 @@ public class CustomerClient extends Client {
         super();
     }
 
-    public CustomerClient(String ip, int port) throws IOException {
-        super(ip, port);
-    }
 
     /**
      * Обработка сообщения пользователя
@@ -60,11 +57,7 @@ public class CustomerClient extends Client {
 
 
     public static void main(String args[]) {
-        try {
-            new CustomerClient(ip, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new CustomerClient();
     }
 
 }

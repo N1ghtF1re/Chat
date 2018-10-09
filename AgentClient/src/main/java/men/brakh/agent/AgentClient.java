@@ -18,9 +18,6 @@ public class AgentClient extends Client {
         super();
     }
 
-    public AgentClient(String ip, int port) throws IOException {
-        super(ip, port);
-    }
 
     /**
      * Обработка сообщения пользователя
@@ -59,12 +56,9 @@ public class AgentClient extends Client {
         log("Agent " + username + " registered in system");
     }
 
-    public static void main(String args[]) {
-        try {
-            new AgentClient(ip, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void main(String args[]) throws IOException {
+        new AgentClient().start();
+
 
     }
 

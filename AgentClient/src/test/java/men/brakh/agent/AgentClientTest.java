@@ -20,6 +20,7 @@ public class AgentClientTest {
 
     @Before
     public void init() {
+        out = new ByteArrayOutputStream();
         client = new AgentClient() {
             @Override
             public void showMessage(User user, String message) {
@@ -30,23 +31,21 @@ public class AgentClientTest {
             @Override
             public void log(String str) {
             }
+            @Override
+            public void start() {
+            }
+            @Override
+            public void sendMessage(String message) {
+                try {
+                    out.write(message.getBytes());
+                    out.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         };
-        try {
-            client.start(new Socket(){
-                @Override
-                public OutputStream getOutputStream() {
-                    out = new ByteArrayOutputStream();
-                    return out;
-                }
-                @Override
-                public InputStream getInputStream() {
-                    in = new ByteArrayInputStream(input);
-                    return in;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
     }
 
 
