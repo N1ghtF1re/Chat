@@ -54,33 +54,35 @@ public class Server {
     /**
      * Поиск свободных агентов
      */
-    public synchronized void checkFreeAgents() {
-        ExtendUser agent = agentsQueue.getFirst(); // Получаем первого свободного агента
-        if (agent != null) {
-            TwoPersonChat twoPersonChat = customerChatQueue.getFree(); // Ищем чат с пользователем, которому нужна помощь
-            if (twoPersonChat != null) {
-                synchronized (agentsQueue) {
-                    agent = agentsQueue.poll(); // Извлекаем агента из очереди с удалением
+    public void checkFreeAgents() {
+        synchronized (agentsQueue) { // На время проверки синхронизируем очередь агентов
+            ExtendUser agent = agentsQueue.getFirst(); // Получаем первого свободного агента
+            if (agent != null) { // Если есть свободный агент
+                synchronized (customerChatQueue) {
+                    TwoPersonChat twoPersonChat = customerChatQueue.getFree(); // Ищем чат с пользователем, которому нужна помощь
+                    if (twoPersonChat != null) { // Если для агента есть работа (есть "скучающий" пользователь)
+                        agent = agentsQueue.poll(); // Извлекаем агента из очереди с удалением
+
+                        twoPersonChat.setAgent(agent); // Привязываем агента к пользователю
+
+                        log("Agent " + agent.getUser() + " connected to customer " + twoPersonChat.getCustomer().getUser());
+
+                        // Сообщаем пользователю что нашли ему агента
+                        twoPersonChat.getCustomer().getSender().serverSend("К Вам подключился наш агент - " +
+                                agent.getUser() + ". Пожалуйста, не обижайте его.");
+
+                        // Сообщаем агенту что нашли ему пользователя
+                        agent.getSender().serverSend(String.valueOf(twoPersonChat.getId()), "chat");
+                        agent.getSender().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser(), twoPersonChat.getId());
+
+                        // Отправляем агенту все предыдущие сообщения чата
+                        ArrayList<Message> messages = twoPersonChat.getMessages();
+                        for (Message msg : messages) {
+                            agent.getSender().send(msg.getJSON());
+                        }
+
+                    }
                 }
-
-                twoPersonChat.setAgent(agent); // Привязываем агента к пользователю
-
-                log("Agent " + agent.getUser() + " connected to customer " + twoPersonChat.getCustomer().getUser());
-
-                // Сообщаем пользователю что нашли ему агента
-                twoPersonChat.getCustomer().getSender().serverSend("К Вам подключился наш агент - " +
-                        agent.getUser() + ". Пожалуйста, не обижайте его.");
-
-                // Сообщаем агенту что нашли ему пользователя
-                agent.getSender().serverSend(String.valueOf(twoPersonChat.getId()), "chat");
-                agent.getSender().serverSend("Вы подключились к " + twoPersonChat.getCustomer().getUser(), twoPersonChat.getId());
-
-                // Отправляем агенту все предыдущие сообщения чата
-                ArrayList<Message> messages = twoPersonChat.getMessages();
-                for (Message msg : messages) {
-                    agent.getSender().send(msg.getJSON());
-                }
-
             }
         }
     }
