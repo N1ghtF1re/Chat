@@ -33,7 +33,7 @@ public abstract class Client {
 
     private Logger logger;
 
-    private String host = "localhost";
+    private String host = "localhost"; //
     private int port = 8081;
 
 
@@ -136,7 +136,7 @@ public abstract class Client {
 
     }
 
-    public void sendMessage(Message message){
+    public void sendMessage(Message message){ //
         message.setChat_id(currChat);
         String msg = message.getJSON();
         sendMessage(msg);

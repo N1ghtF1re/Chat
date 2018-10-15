@@ -88,7 +88,7 @@ function checkAnswer() {
 
 </script>
 
-<script>
+<script> //it's better to put scipt in separate file
 var webSocket = new WebSocket("ws://localhost:8081/chat");
 var msgField = document.getElementById("messageField");
 var divMsg = document.getElementById("msg-box");
@@ -111,7 +111,7 @@ var currId = 0;
       div_tab.setAttribute("id", id)
       span_text = document.createElement('span')
       span_text.innerHTML = "Tab " + (last_id + 1)
-      span_text.onclick=function(){
+      span_text.onclick=function(){ //maybe it's better to set onclick fumction on div block? not all area of tab reacts on a click
          showTab(id)
       }
       div_tab.appendChild(span_text)
