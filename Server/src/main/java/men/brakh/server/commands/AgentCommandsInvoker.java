@@ -35,6 +35,8 @@ public class AgentCommandsInvoker {
      * @param sendCommand Объект команды отправки сообщения (status "ok")
      * @param addSessionCommand Объект команды создания новой "сессии", для общения с несколькими клиентами
      *                          (status: "add-session")
+     * @param rmSessionCommand Объект команды удаления новой "сессии", для общения с несколькими клиентами
+     *                         (status: "rm-session")
      */
     public AgentCommandsInvoker(Command regCommand, Command skipCommand, Command exitCommand,
                                 Command sendCommand, Command addSessionCommand, Command rmSessionCommand) {
@@ -61,6 +63,7 @@ public class AgentCommandsInvoker {
      * @param exitStringCommand Текстовая команда выхода из чата
      * @param okStringCommand Текстовая команда отправки сообщения
      * @param addSessionStringCommand Текстовая команда создания новой "сессии" (для общения с несколькими клиентами)
+     * @param rmSessionStringCommand Текстовая команда удаления новой "сессии" (для общения с несколькими клиентами)
      */
     public void setCommandsMap(String regStringCommand, String skipStringCommand,
                                String exitStringCommand, String okStringCommand,

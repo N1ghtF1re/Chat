@@ -136,6 +136,10 @@ public abstract class Client {
 
     }
 
+    /**
+     * Отправка сообщения на сервер
+     * @param message объект сообщения
+     */
     public void sendMessage(Message message){
         message.setChat_id(currChat);
         String msg = message.getJSON();

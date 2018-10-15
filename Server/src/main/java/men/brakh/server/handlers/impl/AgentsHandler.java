@@ -11,8 +11,8 @@ import men.brakh.server.commands.AgentCommandsInvoker;
  * Обработчик сообщений агента
  */
 public class AgentsHandler implements Handler {
-    Server server;
-    Sender sender;
+    private Server server;
+    private Sender sender;
 
     public AgentsHandler(Server server, Sender sender) {
         this.server = server;
