@@ -36,6 +36,7 @@ public class AgentCommandsInvoker {
      * @param addSessionCommand Объект команды создания новой "сессии", для общения с несколькими клиентами
      *                          (status: "add-session")
      */
+    //rmSessionCommand is not documented
     public AgentCommandsInvoker(Command regCommand, Command skipCommand, Command exitCommand,
                                 Command sendCommand, Command addSessionCommand, Command rmSessionCommand) {
         this.regCommand = regCommand;
@@ -62,6 +63,7 @@ public class AgentCommandsInvoker {
      * @param okStringCommand Текстовая команда отправки сообщения
      * @param addSessionStringCommand Текстовая команда создания новой "сессии" (для общения с несколькими клиентами)
      */
+    //rmSessionCommand is not documented
     public void setCommandsMap(String regStringCommand, String skipStringCommand,
                                String exitStringCommand, String okStringCommand,
                                String addSessionStringCommand, String rmSessionStringCommand) {

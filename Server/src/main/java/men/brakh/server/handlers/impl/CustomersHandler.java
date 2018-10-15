@@ -14,14 +14,14 @@ import men.brakh.server.commands.impl.customer.CustomerSendCommand;
  * Обработчик сообщений клиента
  */
 public class CustomersHandler implements Handler {
-    Server server;
+    Server server; // Access can be private)))
     Sender sender;
 
     public CustomersHandler(Server server, Sender sender) {
         this.server = server;
         this.sender = sender;
     }
-
+// Learned a better method to design handler. Nice work
     @Override
     public boolean handle(Message userMessage) {
         CustomerCommandsInvoker invoker = new CustomerCommandsInvoker(

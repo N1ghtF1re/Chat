@@ -15,7 +15,7 @@ public class Logger {
         this.isWriteToConsole = isWriteToConsole;
         out = new FileWriter(filename, true);
     }
-    public Logger(String filename) throws IOException {
+    public Logger(String filename) throws IOException { //is never used
         this(filename, false);
     }
     public Logger(Boolean isWriteToConsole) throws IOException {
