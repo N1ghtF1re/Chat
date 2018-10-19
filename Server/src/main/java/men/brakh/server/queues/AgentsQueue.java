@@ -52,6 +52,20 @@ public class AgentsQueue {
     }
 
     /**
+     * Поиск агента в очереди
+     * @param id id агента
+     * @return Объект агента если он найден, иначе - null
+     */
+    public User searchAgent(int id) {
+        for (ExtendUser currAgent : queue) {
+            if (currAgent.getUser().getId() == id) {
+                return currAgent.getUser();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Удаление агента из списка
      * @param agent Объект агента
      */
@@ -79,4 +93,16 @@ public class AgentsQueue {
     public ExtendUser poll() {
         return queue.pollFirst();
     }
+
+    /**
+     * Возвращает массив из всех свободных агентов
+     * @return массив из всех свободных агентов
+     */
+    public ExtendUser[] getAll() {
+        ExtendUser[] result = new ExtendUser[queue.size()];
+        result = queue.toArray(result);
+        return result;
+    }
+
+
 }

@@ -37,6 +37,15 @@ public class CustomerChatQueue {
         return null;
     }
 
+    public TwoPersonChat searchCustomer(int id) {
+        for (TwoPersonChat chat : queue) {
+            if (chat.getCustomer().getUser().getId() == id) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
     public TwoPersonChat getFree() {
         for (TwoPersonChat chat : queue) {
             if (chat.getAgent() == null) {
@@ -57,6 +66,17 @@ public class CustomerChatQueue {
         return null;
     }
 
+    public TwoPersonChat searchAgent(int id) {
+        for (TwoPersonChat chat : queue) {
+            if (chat.getAgent() != null) {
+                if (chat.getAgent().getUser().getId() == id) {
+                    return chat;
+                }
+            }
+        }
+        return null;
+    }
+
     public TwoPersonChat getById(int id) {
         for (TwoPersonChat chat : queue) {
             if(chat.getId() == id) {
@@ -64,6 +84,12 @@ public class CustomerChatQueue {
             }
         }
         return null;
+    }
+
+    public TwoPersonChat[] getAll() {
+        TwoPersonChat[] result = new TwoPersonChat[queue.size()];
+        result = queue.toArray(result);
+        return result;
     }
 
     public void remove(TwoPersonChat chat) {
