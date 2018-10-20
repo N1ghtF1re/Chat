@@ -51,7 +51,7 @@ public class MainController {
     }
 
     @RequestMapping("/agents")
-    public List<User> getAllAgents(@RequestParam(value="page", defaultValue="1") int page, @RequestParam(value="pageSize", defaultValue="10") int pageSize){
+    public List<User> getAllAgents(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize){
         List<User> users = new LinkedList<>();
         synchronized (server.agentsQueue) {
             synchronized (server.customerChatQueue) {
@@ -67,13 +67,14 @@ public class MainController {
                 }
             }
         }
-
-        return users.subList(page*pageSize, page*pageSize + pageSize - 1);
+        int startIndex = page*pageSize > users.size() ? users.size() : pageSize*page;
+        int endIndex = page*pageSize + pageSize > users.size() ? users.size() : pageSize*page + pageSize;
+        return users.subList(startIndex, endIndex);
     }
 
     // TODO: Доделать страницы для других списков
     @RequestMapping("/agents/free")
-    public List<User> getFreeAgents() {
+    public List<User> getFreeAgents(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<User> users = new LinkedList<>();
         synchronized (server.agentsQueue) {
             synchronized (server.customerChatQueue) {
@@ -83,7 +84,9 @@ public class MainController {
             }
         }
 
-        return users;
+        int startIndex = page*pageSize > users.size() ? users.size() : pageSize*page;
+        int endIndex = page*pageSize + pageSize > users.size() ? users.size() : pageSize*page + pageSize;
+        return users.subList(startIndex, endIndex);
     }
 
     @RequestMapping("agent")
@@ -110,7 +113,7 @@ public class MainController {
     }
 
     @RequestMapping("/chats")
-    public String getChats() {
+    public String getChats(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<RequestChat> chats = new LinkedList<>();
 
         synchronized (server.customerChatQueue) {
@@ -119,7 +122,11 @@ public class MainController {
             }
         }
         Gson gson = new Gson();
-        return gson.toJson(chats);
+
+        int startIndex = page*pageSize > chats.size() ? chats.size() : pageSize*page;
+        int endIndex = page*pageSize + pageSize > chats.size() ? chats.size() : pageSize*page + pageSize;
+
+        return gson.toJson(chats.subList(startIndex, endIndex));
     }
 
     @RequestMapping("/chat")
@@ -130,11 +137,13 @@ public class MainController {
         }
         RequestChat requestChat = new RequestChat(chat);
         Gson gson = new Gson();
+
+
         return gson.toJson(requestChat);
     }
 
     @RequestMapping("customers/free")
-    public List<User> getFreeCustomers() {
+    public List<User> getFreeCustomers(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<User> chats = new LinkedList<>();
         synchronized (server.customerChatQueue) {
             for(TwoPersonChat chat: server.customerChatQueue.getAll()) {
@@ -144,7 +153,10 @@ public class MainController {
                 }
             }
         }
-        return chats;
+        int startIndex = page*pageSize > chats.size() ? chats.size() : pageSize*page;
+        int endIndex = page*pageSize + pageSize > chats.size() ? chats.size() : pageSize*page + pageSize;
+        return chats.subList(startIndex, endIndex);
+
     }
 
     @RequestMapping("/customer")
@@ -209,13 +221,14 @@ public class MainController {
             chat_id = chat.getId();
         } else { // Иначе - будем создавать новую :)
             String name = customersNames.get(id);
-            if(customersNames.containsKey(id)) {
+            if(!customersNames.containsKey(id)) {
                 return;
             }
             customer = new User(name, id);
             customer.setUserType(UsersTypes.CUSTOMER);
             chat_id = -1;
         }
+
 
         Message message = new Message(customer, msg, chat_id);
         JsonSender jsonSender = new JsonSender();
