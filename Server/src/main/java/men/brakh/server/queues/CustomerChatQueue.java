@@ -1,5 +1,6 @@
 package men.brakh.server.queues;
 
+import men.brakh.chat.UsersTypes;
 import men.brakh.server.senders.Sender;
 import men.brakh.chat.User;
 import men.brakh.server.data.TwoPersonChat;
@@ -19,6 +20,7 @@ public class CustomerChatQueue {
 
 
     public void add(User user, Sender sender) {
+        user.setUserType(UsersTypes.CUSTOMER);
         queue.addLast(new TwoPersonChat(user, sender, getCurrId()));
     }
     public TwoPersonChat getFirst() {

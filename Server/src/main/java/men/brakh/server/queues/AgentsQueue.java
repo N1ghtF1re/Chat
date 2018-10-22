@@ -1,5 +1,6 @@
 package men.brakh.server.queues;
 
+import men.brakh.chat.UsersTypes;
 import men.brakh.server.senders.Sender;
 import men.brakh.server.data.ExtendUser;
 import men.brakh.chat.User;
@@ -18,6 +19,7 @@ public class AgentsQueue {
      * @param sender Объект для связи с пользователем
      */
     public void add(User user, Sender sender) {
+        user.setUserType(UsersTypes.AGENT);
         queue.addLast(new ExtendUser(user, sender));
     }
 
@@ -26,6 +28,7 @@ public class AgentsQueue {
      * @param user Расширенный объект агента (Объект агента + объект соединения)
      */
     public void add(ExtendUser user) {
+        user.getUser().setUserType(UsersTypes.AGENT);
         queue.addLast(user);
     }
 

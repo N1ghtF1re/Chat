@@ -16,9 +16,7 @@ import men.brakh.server.handlers.impl.AgentsHandler;
 import men.brakh.server.handlers.impl.CustomersHandler;
 import men.brakh.server.senders.impl.JsonSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -50,7 +48,7 @@ public class MainController {
         }
     }
 
-    @RequestMapping("/agents")
+    @GetMapping("/agents")
     public List<User> getAllAgents(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize){
         List<User> users = new LinkedList<>();
         synchronized (server.agentsQueue) {
@@ -72,8 +70,8 @@ public class MainController {
         return users.subList(startIndex, endIndex);
     }
 
-    // TODO: Доделать страницы для других списков
-    @RequestMapping("/agents/free")
+
+    @GetMapping("/agents/free")
     public List<User> getFreeAgents(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<User> users = new LinkedList<>();
         synchronized (server.agentsQueue) {
@@ -89,7 +87,7 @@ public class MainController {
         return users.subList(startIndex, endIndex);
     }
 
-    @RequestMapping("agent")
+    @GetMapping("agent")
     public User getAgent(@RequestParam(value="id") int id) {
         User agent;
         agent = server.agentsQueue.searchAgent(id);
@@ -107,12 +105,12 @@ public class MainController {
         return null;
     }
 
-    @RequestMapping("/agents/free/count")
+    @GetMapping("/agents/free/count")
     public int getFreeAgentsCount() {
         return server.agentsQueue.getAll().length;
     }
 
-    @RequestMapping("/chats")
+    @GetMapping("/chats")
     public String getChats(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<RequestChat> chats = new LinkedList<>();
 
@@ -129,7 +127,7 @@ public class MainController {
         return gson.toJson(chats.subList(startIndex, endIndex));
     }
 
-    @RequestMapping("/chat")
+    @GetMapping("/chat")
     public String getChat(@RequestParam(value="id") int id) {
         TwoPersonChat chat = server.customerChatQueue.getById(id);
         if(chat == null) {
@@ -142,7 +140,7 @@ public class MainController {
         return gson.toJson(requestChat);
     }
 
-    @RequestMapping("customers/free")
+    @GetMapping("customers/free")
     public List<User> getFreeCustomers(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="pagesize", defaultValue="10") int pageSize) {
         List<User> chats = new LinkedList<>();
         synchronized (server.customerChatQueue) {
@@ -159,7 +157,7 @@ public class MainController {
 
     }
 
-    @RequestMapping("/customer")
+    @GetMapping("/customer")
     public User getCustomer(@RequestParam(value="id") int id) {
         TwoPersonChat chat = server.customerChatQueue.searchCustomer(id);
         if(chat != null) {
@@ -168,7 +166,7 @@ public class MainController {
         return null;
     }
 
-    @RequestMapping("/agent/add")
+    @PostMapping("/agent/add")
     public int addAgent(@RequestParam(value="name") String name) {
         User user = new User(name);
         JsonSender jsonSender = new JsonSender();
@@ -179,7 +177,7 @@ public class MainController {
         return Integer.parseInt(jsonSender.getLast().getMessage());
     }
 
-    @RequestMapping("/customer/add")
+    @PostMapping("/customer/add")
     public int addCustomer(@RequestParam(value="name") String name) {
         User user = new User(name);
 
@@ -195,7 +193,7 @@ public class MainController {
         return customer_id;
     }
 
-    @RequestMapping("agent/send")
+    @PostMapping("agent/send")
     public void agentSendMessage(@RequestParam(value="id") int id, @RequestParam(value="message") String msg) {
         TwoPersonChat chat = server.customerChatQueue.searchAgent(id);
 
@@ -208,7 +206,7 @@ public class MainController {
         agentsHandler.handle(message);
     }
 
-    @RequestMapping("customer/send")
+    @PostMapping("customer/send")
     public void customerSendMessage(@RequestParam(value="id") int id, @RequestParam(value="message") String msg) {
         TwoPersonChat chat = server.customerChatQueue.searchCustomer(id);
         User customer;
@@ -236,7 +234,7 @@ public class MainController {
         customersHandler.handle(message);
     }
 
-    @RequestMapping("agent/messages")
+    @GetMapping("agent/messages")
     public List<Message> getAgentMessages(@RequestParam(value="id") int id) {
         TwoPersonChat chat = server.customerChatQueue.searchAgent(id);
         if (chat == null) {
@@ -245,7 +243,7 @@ public class MainController {
         return chat.getMessages();
     }
 
-    @RequestMapping("customer/messages")
+    @GetMapping("customer/messages")
     public List<Message> getCustomersMessages(@RequestParam(value="id") int id) {
         TwoPersonChat chat = server.customerChatQueue.searchCustomer(id);
         if (chat == null) {
@@ -254,7 +252,7 @@ public class MainController {
         return chat.getMessages();
     }
 
-    @RequestMapping("agent/exit")
+    @PostMapping("agent/exit")
     public void exitAgent(@RequestParam(value="id") int id) {
         User agent;
         JsonSender jsonSender = new JsonSender();
@@ -276,7 +274,7 @@ public class MainController {
         }
     }
 
-    @RequestMapping("customer/exit")
+    @PostMapping("customer/exit")
     public void exitCustomer(@RequestParam(value="id") int id) {
         TwoPersonChat chat = server.customerChatQueue.searchCustomer(id);
         if(chat == null) {
