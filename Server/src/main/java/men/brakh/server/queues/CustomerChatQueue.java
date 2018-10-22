@@ -1,5 +1,6 @@
 package men.brakh.server.queues;
 
+import men.brakh.chat.UsersTypes;
 import men.brakh.server.senders.Sender;
 import men.brakh.chat.User;
 import men.brakh.server.data.TwoPersonChat;
@@ -19,6 +20,7 @@ public class CustomerChatQueue {
 
 
     public void add(User user, Sender sender) {
+        user.setUserType(UsersTypes.CUSTOMER);
         queue.addLast(new TwoPersonChat(user, sender, getCurrId()));
     }
     public TwoPersonChat getFirst() {
@@ -31,6 +33,15 @@ public class CustomerChatQueue {
     public TwoPersonChat searchCustomer(User customer) {
         for (TwoPersonChat chat : queue) {
             if (chat.getCustomer().getUser().equal(customer)) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
+    public TwoPersonChat searchCustomer(int id) {
+        for (TwoPersonChat chat : queue) {
+            if (chat.getCustomer().getUser().getId() == id) {
                 return chat;
             }
         }
@@ -57,6 +68,17 @@ public class CustomerChatQueue {
         return null;
     }
 
+    public TwoPersonChat searchAgent(int id) {
+        for (TwoPersonChat chat : queue) {
+            if (chat.getAgent() != null) {
+                if (chat.getAgent().getUser().getId() == id) {
+                    return chat;
+                }
+            }
+        }
+        return null;
+    }
+
     public TwoPersonChat getById(int id) {
         for (TwoPersonChat chat : queue) {
             if(chat.getId() == id) {
@@ -64,6 +86,12 @@ public class CustomerChatQueue {
             }
         }
         return null;
+    }
+
+    public TwoPersonChat[] getAll() {
+        TwoPersonChat[] result = new TwoPersonChat[queue.size()];
+        result = queue.toArray(result);
+        return result;
     }
 
     public void remove(TwoPersonChat chat) {

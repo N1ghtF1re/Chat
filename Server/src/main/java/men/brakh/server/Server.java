@@ -10,12 +10,14 @@ import men.brakh.server.listeners.WebSocketsListener;
 import men.brakh.server.queues.AgentsQueue;
 import men.brakh.server.queues.CustomerChatQueue;
 import men.brakh.server.senders.Sender;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+@Configuration
 public class Server {
     private int id = 0;
     public static final int PORT = 7777;
@@ -43,12 +45,6 @@ public class Server {
         SocketsListener socketsListener = new SocketsListener(this, port);
         WebSocketsListener webSocketsListener = new WebSocketsListener(this);
 
-        try {
-            socketsListener.join();
-            webSocketsListener.join();
-        } catch (InterruptedException e) {
-            log(e);
-        }
     }
 
     /**
